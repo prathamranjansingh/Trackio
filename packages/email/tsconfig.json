@@ -1,0 +1,20 @@
+{
+  "extends": "@repo/typescript-config/base.json",
+  "include": [
+    "src/**/*"
+, "test-email.ts"  ],
+  "exclude": [
+    "node_modules"
+  ],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "jsxImportSource": "react",
+    "strict": true,
+    "paths": {
+      "@email/*": ["*"]
+    }
+  }
+}
