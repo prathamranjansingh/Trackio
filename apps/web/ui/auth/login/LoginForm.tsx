@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { signIn } from "next-auth/react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Button, Input, GoogleLogo, GithubLogo } from "@trackio/ui";
@@ -15,23 +15,41 @@ const messages: Record<string, string> = {
   "exceeded-login-attempts":
     "Your account is locked due to too many failed log-ins.",
   "too-many-login-attempts": "Too many attempts. Try again in a minute.",
+  "invalid-token": "Invalid or missing password reset token.",
+  "expired-token": "Password reset token has expired. Please request a new one.",
+  "server-error": "An error occurred. Please try again.",
+};
+
+const successMessages: Record<string, string> = {
+  "password-reset-success": "Password reset successfully! You can now log in with your new password.",
 };
 
 const TAB = {
   PASSWORD: "password",
   MAGIC: "magic",
+  RESET: "reset",
 } as const;
 
 export default function LoginPage() {
   const [tab, setTab] = useState<(typeof TAB)[keyof typeof TAB]>(TAB.PASSWORD);
   const [email, setEmail] = useState("");
   const [pwd, setPwd] = useState("");
-  const [magicEmail, setMagicEmail] = useState("");
+  const [resetEmail, setResetEmail] = useState("");
   const [busy, setBusy] = useState(false);
 
   const params = useSearchParams();
   const router = useRouter();
   const error = params.get("error");
+  const message = params.get("message");
+
+  useEffect(() => {
+    if (error && messages[error]) {
+      toast.error(messages[error]);
+    }
+    if (message && successMessages[message]) {
+      toast.success(successMessages[message]);
+    }
+  }, [error, message]);
 
   async function handleCredentials(e: React.FormEvent) {
     e.preventDefault();
@@ -80,21 +98,57 @@ export default function LoginPage() {
     }
   }
 
+  async function handleResetPassword(e: React.FormEvent) {
+    e.preventDefault();
+    setBusy(true);
+    try {
+      const response = await fetch("/api/auth/forgot-password", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email: resetEmail }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        toast.success("Password reset link sent! Check your inbox.");
+        setResetEmail("");
+        // Optionally switch back to login tab
+        setTimeout(() => setTab(TAB.PASSWORD), 2000);
+      } else {
+        toast.error(data.message || "Failed to send reset link.");
+      }
+    } catch {
+      toast.error("Something went wrong while sending the reset link.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
   return (
     <main className="mb-auto mt-8 sm:mx-auto sm:w-full sm:max-w-lg">
       <div className="max-w-full p-6 text-white bg-[#171717] border border-subtle rounded-md mx-2 px-4 py-10 sm:px-10">
+        {/* Show error message if exists */}
+        {error && (
+          <div className="mb-4 p-3 text-sm text-red-300 bg-red-900/20 border border-red-900/50 rounded-md">
+            {messages[error] ?? "An error occurred during sign-in."}
+          </div>
+        )}
+
         {/* Social Logins */}
         <div className="space-y-3 mb-8">
           <Button
             onClick={() => signIn("google")}
-            className="w-full border bg-white hover:bg-gray-200 border-white py-2 font-medium"
+            className="w-full border bg-white hover:bg-gray-200 border-white py-2 font-medium text-black"
           >
             <GoogleLogo />
             Sign in with Google
           </Button>
           <Button
             onClick={() => signIn("github")}
-            className="w-full border bg-white hover:bg-gray-200 border-white py-2 font-medium"
+            className="w-full border bg-white hover:bg-gray-200 border-white py-2 font-medium text-black"
           >
             <GithubLogo />
             Sign in with GitHub
@@ -132,6 +186,17 @@ export default function LoginPage() {
           >
             Magic Link
           </button>
+          <button
+            onClick={() => setTab(TAB.RESET)}
+            className={clsx(
+              "flex-1 py-2 text-sm font-medium",
+              tab === TAB.RESET
+                ? "text-white border-b-2 border-white"
+                : "text-gray-400"
+            )}
+          >
+            Reset Password
+          </button>
         </div>
 
         {/* Tab Content */}
@@ -143,6 +208,7 @@ export default function LoginPage() {
               placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              className="w-full"
             />
             <Input
               required
@@ -150,6 +216,7 @@ export default function LoginPage() {
               placeholder="Password"
               value={pwd}
               onChange={(e) => setPwd(e.target.value)}
+              className="w-full"
             />
             <Button
               type="submit"
@@ -158,6 +225,17 @@ export default function LoginPage() {
             >
               {busy ? "Signing in..." : "Sign in"}
             </Button>
+            
+            {/* Forgot Password Link */}
+            <div className="text-center">
+              <button
+                type="button"
+                onClick={() => setTab(TAB.RESET)}
+                className="text-sm text-gray-400 hover:text-white transition-colors"
+              >
+                Forgot your password?
+              </button>
+            </div>
           </form>
         )}
 
@@ -169,6 +247,7 @@ export default function LoginPage() {
               placeholder="Work email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              className="w-full"
             />
             <Button
               type="submit"
@@ -179,10 +258,44 @@ export default function LoginPage() {
             </Button>
           </form>
         )}
+
+        {tab === TAB.RESET && (
+          <form onSubmit={handleResetPassword} className="space-y-4">
+            <div className="text-sm text-gray-300 mb-4">
+              Enter your email address and we'll send you a link to reset your password.
+            </div>
+            <Input
+              required
+              type="email"
+              placeholder="Enter your email"
+              value={resetEmail}
+              onChange={(e) => setResetEmail(e.target.value)}
+              className="w-full"
+            />
+            <Button
+              type="submit"
+              disabled={busy}
+              className="w-full text-white py-2 font-medium disabled:opacity-50"
+            >
+              {busy ? "Sending..." : "Send Reset Link"}
+            </Button>
+            
+            {/* Back to Sign In Link */}
+            <div className="text-center">
+              <button
+                type="button"
+                onClick={() => setTab(TAB.PASSWORD)}
+                className="text-sm text-gray-400 hover:text-white transition-colors"
+              >
+                Back to sign in
+              </button>
+            </div>
+          </form>
+        )}
       </div>
 
       <div className="mt-6 text-center text-gray-300 text-sm cursor-pointer hover:text-white">
-        <Link href="/signup">Don't have an account?</Link>
+        <Link href="/signup">Don't have an account? Sign up</Link>
       </div>
     </main>
   );

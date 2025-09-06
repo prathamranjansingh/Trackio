@@ -11,7 +11,9 @@ export * from "./components/ui/separator";
 export * from "./components/ui/sheet";
 export * from "./components/ui/breadcrumb";
 export * from "./components/ui/avatar";
+export * from "./components/ui/label"
 export * from "../lib/utils"
+export * from "./components/ui/card"
 //icons
 export * from "./icons/GoogleLogo";
 export * from "./icons/GithubLogo";

@@ -1,7 +1,4 @@
-import {
-  TrackioApiError,
-  handleAndReturnErrorResponse,
-} from "@/lib/api/errors";
+import { TrackioApiError, handleAndReturnErrorResponse } from "@/lib/api/errors";
 import { parseRequestBody, ratelimitOrThrow } from "@/lib/api/utils";
 import { hashPassword } from "@/lib/auth/password";
 import { resetPasswordSchema } from "@/lib/zod/schemas/auth";
@@ -17,7 +14,7 @@ export async function POST(req: NextRequest) {
     await ratelimitOrThrow(req, "reset-password");
 
     const { token, password } = resetPasswordSchema.parse(
-      await parseRequestBody(req)
+      await parseRequestBody(req),
     );
 
     // Find the token
@@ -82,7 +79,7 @@ export async function POST(req: NextRequest) {
           email: identifier,
           verb: "reset",
         }),
-      })
+      }),
     );
 
     return NextResponse.json({ ok: true });

@@ -1,8 +1,8 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-import { sendOtpAction } from "@/lib/send-top";
-import { verifyOtpAction } from "@/lib/verify-otp";
+import { sendOtpAction } from "@/lib/actions/send-top";
+import { verifyOtpAction } from "@/lib/actions/verify-otp"
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { toast } from "sonner";

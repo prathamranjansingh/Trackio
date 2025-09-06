@@ -23,6 +23,7 @@
     "next": "^15.5.0",
     "next-auth": "^4.24.11",
     "next-axiom": "^1.9.2",
+    "next-safe-action": "^8.0.11",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "zod": "^4.1.5",
