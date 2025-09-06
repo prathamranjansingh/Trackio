@@ -1,21 +1,29 @@
 import { TrackioApiError, handleAndReturnErrorResponse } from "@/lib/api/errors";
 import { parseRequestBody, ratelimitOrThrow } from "@/lib/api/utils";
 import { hashPassword } from "@/lib/auth/password";
-import { resetPasswordSchema } from "@/lib/zod/schemas/auth";
+import { passwordSchema } from "@/lib/zod/schemas/auth"; // use passwordSchema only
 import { sendEmail } from "@trackio/email";
 import { PasswordUpdated } from "@trackio/email/templates/password-updated";
 import { prisma } from "@trackio/prisma";
 import { waitUntil } from "@vercel/functions";
 import { NextRequest, NextResponse } from "next/server";
+import z from "@/lib/zod";
+
+// ✅ Define a simplified schema just for this API
+const resetPasswordApiSchema = z.object({
+  token: z.string().min(1, "Reset token is required"),
+  password: passwordSchema,
+});
 
 // POST /api/auth/reset-password - reset password using the reset token
 export async function POST(req: NextRequest) {
   try {
     await ratelimitOrThrow(req, "reset-password");
 
-    const { token, password } = resetPasswordSchema.parse(
-      await parseRequestBody(req),
-    );
+    // Parse and validate incoming body
+    const body = await parseRequestBody(req);
+    console.log("Reset password body:", body); // 🐞 Debug log
+    const { token, password } = resetPasswordApiSchema.parse(body);
 
     // Find the token
     const tokenFound = await prisma.passwordResetToken.findFirst({
@@ -49,28 +57,23 @@ export async function POST(req: NextRequest) {
       },
     });
 
+    // ✅ Transaction: delete token + update password
     await prisma.$transaction([
-      // Delete the token
       prisma.passwordResetToken.deleteMany({
-        where: {
-          token,
-        },
+        where: { token },
       }),
 
-      // Update the user's password
       prisma.user.update({
-        where: {
-          email: identifier,
-        },
+        where: { email: identifier },
         data: {
           passwordHash: await hashPassword(password),
-          lockedAt: null, // Unlock the account after a successful password reset
-          ...(!user.emailVerified && { emailVerified: new Date() }), // Mark the email as verified
+          lockedAt: null, // Unlock account after successful reset
+          ...(!user.emailVerified && { emailVerified: new Date() }), // Mark as verified if not yet
         },
       }),
     ]);
 
-    // Send the email to inform the user that their password has been reset
+    // Send confirmation email (non-blocking)
     waitUntil(
       sendEmail({
         subject: `Your ${process.env.NEXT_PUBLIC_APP_NAME} account password has been reset`,
@@ -84,6 +87,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ ok: true });
   } catch (error) {
+    console.error("Reset password error:", error); // 🐞 Log full error
     return handleAndReturnErrorResponse(error);
   }
 }

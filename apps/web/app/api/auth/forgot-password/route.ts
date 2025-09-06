@@ -76,7 +76,7 @@ export async function POST(req: NextRequest) {
     console.log("Database transaction completed");
 
     // Send email with reset link
-    const resetUrl = `${process.env.NEXTAUTH_URL}/auth/reset-password/${token}`;
+    const resetUrl = `${process.env.NEXTAUTH_URL}/reset-password/${token}`;
     console.log("Reset URL:", resetUrl);
     
     try {
