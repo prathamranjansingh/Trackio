@@ -9,9 +9,9 @@ export default function ForgotPasswordPage() {
   return (
     <AuthLayout>
       <div className="w-full max-w-sm text-white">
-        <h3 className="text-center text-xl font-semibold">
+        <h1 className="text-center text-3xl font-semibold">
           Forgot Password?
-        </h3>
+        </h1>
 
         <div className="mt-8">
           <ForgotPasswordForm />

@@ -49,7 +49,7 @@ export const ForgotPasswordForm = () => {
           <Button
             type="submit"
             disabled={isPending || email.length < 3}
-            className="w-full"
+            className="w-full text-white py-2 font-medium disabled:opacity-50"
           >
             {isPending ? "Sending..." : "Send reset link"}
           </Button>
