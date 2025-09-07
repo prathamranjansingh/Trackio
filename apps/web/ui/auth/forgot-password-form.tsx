@@ -15,7 +15,7 @@ export const ForgotPasswordForm = () => {
   const { executeAsync, isPending } = useAction(requestPasswordResetAction, {
     onSuccess() {
       toast.success(
-        "You will receive an email with instructions to reset your password.",
+        "You will receive an email with instructions to reset your password."
       );
       router.push("/login");
     },
@@ -25,7 +25,8 @@ export const ForgotPasswordForm = () => {
   });
 
   return (
-    <div className="flex w-full flex-col gap-3">
+    <main className="mb-auto mt-8 sm:mx-auto sm:w-full sm:max-w-lg">
+    <div className="max-w-full p-6 text-white bg-[#171717] border border-subtle rounded-md mx-2 px-4 py-10 sm:px-10">
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -55,5 +56,6 @@ export const ForgotPasswordForm = () => {
         </div>
       </form>
     </div>
+    </main>
   );
 };

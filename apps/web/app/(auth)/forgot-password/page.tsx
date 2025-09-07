@@ -8,9 +8,9 @@ export const metadata = {
 export default function ForgotPasswordPage() {
   return (
     <AuthLayout>
-      <div className="w-full max-w-sm">
+      <div className="w-full max-w-sm text-white">
         <h3 className="text-center text-xl font-semibold">
-          Reset your password
+          Forgot Password?
         </h3>
 
         <div className="mt-8">

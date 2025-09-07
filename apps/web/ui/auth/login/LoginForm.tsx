@@ -98,35 +98,6 @@ export default function LoginPage() {
     }
   }
 
-  async function handleResetPassword(e: React.FormEvent) {
-    e.preventDefault();
-    setBusy(true);
-    try {
-      const response = await fetch("/api/auth/forgot-password", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email: resetEmail }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        toast.success("Password reset link sent! Check your inbox.");
-        setResetEmail("");
-        // Optionally switch back to login tab
-        setTimeout(() => setTab(TAB.PASSWORD), 2000);
-      } else {
-        toast.error(data.message || "Failed to send reset link.");
-      }
-    } catch {
-      toast.error("Something went wrong while sending the reset link.");
-    } finally {
-      setBusy(false);
-    }
-  }
-
   return (
     <main className="mb-auto mt-8 sm:mx-auto sm:w-full sm:max-w-lg">
       <div className="max-w-full p-6 text-white bg-[#171717] border border-subtle rounded-md mx-2 px-4 py-10 sm:px-10">
@@ -186,17 +157,6 @@ export default function LoginPage() {
           >
             Magic Link
           </button>
-          <button
-            onClick={() => setTab(TAB.RESET)}
-            className={clsx(
-              "flex-1 py-2 text-sm font-medium",
-              tab === TAB.RESET
-                ? "text-white border-b-2 border-white"
-                : "text-gray-400"
-            )}
-          >
-            Reset Password
-          </button>
         </div>
 
         {/* Tab Content */}
@@ -228,14 +188,14 @@ export default function LoginPage() {
             
             {/* Forgot Password Link */}
             <div className="text-center">
-              <button
-                type="button"
-                onClick={() => setTab(TAB.RESET)}
+              <Link
+                href="/forgot-password"
                 className="text-sm text-gray-400 hover:text-white transition-colors"
               >
                 Forgot your password?
-              </button>
+              </Link>
             </div>
+
           </form>
         )}
 
@@ -256,40 +216,6 @@ export default function LoginPage() {
             >
               {busy ? "Sending..." : "Send Magic Link"}
             </Button>
-          </form>
-        )}
-
-        {tab === TAB.RESET && (
-          <form onSubmit={handleResetPassword} className="space-y-4">
-            <div className="text-sm text-gray-300 mb-4">
-              Enter your email address and we'll send you a link to reset your password.
-            </div>
-            <Input
-              required
-              type="email"
-              placeholder="Enter your email"
-              value={resetEmail}
-              onChange={(e) => setResetEmail(e.target.value)}
-              className="w-full"
-            />
-            <Button
-              type="submit"
-              disabled={busy}
-              className="w-full text-white py-2 font-medium disabled:opacity-50"
-            >
-              {busy ? "Sending..." : "Send Reset Link"}
-            </Button>
-            
-            {/* Back to Sign In Link */}
-            <div className="text-center">
-              <button
-                type="button"
-                onClick={() => setTab(TAB.PASSWORD)}
-                className="text-sm text-gray-400 hover:text-white transition-colors"
-              >
-                Back to sign in
-              </button>
-            </div>
           </form>
         )}
       </div>
