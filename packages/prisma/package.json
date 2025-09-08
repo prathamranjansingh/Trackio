@@ -15,8 +15,8 @@
   "description": "",
   "dependencies": {
     "@prisma/adapter-neon": "^6.10.0",
-    "@prisma/client": "^6.10.0",
-    "prisma": "^6.10.0",
+    "@prisma/client": "^6.15.0",
+    "prisma": "^6.15.0",
     "ws": "^8.18.2"
   }
 }

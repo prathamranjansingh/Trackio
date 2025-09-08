@@ -15,7 +15,7 @@ export const ForgotPasswordForm = () => {
   const { executeAsync, isPending } = useAction(requestPasswordResetAction, {
     onSuccess() {
       toast.success(
-        "You will receive an email with instructions to reset your password."
+        "If an account exists with this email, you’ll receive instructions."
       );
       router.push("/login");
     },

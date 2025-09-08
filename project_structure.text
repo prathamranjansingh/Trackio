@@ -3,9 +3,11 @@
 - .turbo
   - cache
   - cookies
+    - 1.cookie
   - daemon
     - 5ee278737f73a6a9-turbo.log.2025-09-05
     - 5ee278737f73a6a9-turbo.log.2025-09-06
+    - 5ee278737f73a6a9-turbo.log.2025-09-08
 - apps
   - docs
     - .gitignore
@@ -46,6 +48,8 @@
             - page.tsx
         - signup
           - page.tsx
+      - (public)
+        - page.tsx
       - api
         - auth
           - forgot-password
@@ -61,7 +65,6 @@
       - globals.css
       - layout.tsx
       - page.module.css
-      - page.tsx
       - providers.tsx
     - eslint.config.js
     - lib
@@ -91,6 +94,11 @@
         - is-blacklisted-key.ts
         - is-reserved-username.ts
         - update.ts
+      - middleware
+        - app.ts
+        - get-user-via-token.ts
+        - parse.ts
+      - types.ts
       - upstash
         - cache.ts
         - index.ts
@@ -246,5 +254,6 @@
       - index.ts
     - tsconfig.json
     - tsup.config.ts
+- project_structure.text
 - README.md
 - turbo.json

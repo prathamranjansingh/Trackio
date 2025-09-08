@@ -23,5 +23,13 @@
   ],
   "dependencies": {
     "vercel": "^47.0.5"
+  },
+  "resolutions": {
+    "next": "15.5.2",
+    "next-auth": "4.24.11"
+  },
+  "overrides": {
+    "next": "15.5.2",
+    "next-auth": "4.24.11"
   }
 }
