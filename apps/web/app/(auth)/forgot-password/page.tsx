@@ -1,5 +1,6 @@
 import { ForgotPasswordForm } from "@/ui/auth/forgot-password-form";
 import { AuthLayout } from "@/ui/layout/auth-layout";
+import Link from "next/link";
 
 export const metadata = {
   title: `Forgot Password | ${process.env.NEXT_PUBLIC_APP_NAME ?? "App"}`,
@@ -16,6 +17,10 @@ export default function ForgotPasswordPage() {
         <div className="mt-8">
           <ForgotPasswordForm />
         </div>
+
+        <div className="mt-6 text-center text-sm cursor-pointer text-gray-300 hover:text-white">
+        <Link href="/login">Back to sign in</Link>
+      </div>
       </div>
     </AuthLayout>
   );

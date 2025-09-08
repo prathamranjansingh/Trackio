@@ -69,6 +69,9 @@ export const ResetPasswordForm = () => {
   };
 
   return (
+    <main className="mb-auto mt-8 sm:mx-auto sm:w-full sm:max-w-lg">
+ <div className="max-w-full p-6 text-white bg-[#171717] border border-subtle rounded-md mx-2 px-4 py-10 sm:px-10">
+   
     <form className="flex w-full flex-col gap-6" onSubmit={onSubmit}>
       <input type="hidden" value={token} />
 
@@ -119,10 +122,12 @@ export const ResetPasswordForm = () => {
       <Button
         type="submit"
         disabled={isSubmitting}
-        className="w-full"
+         className="w-full text-white py-2 font-medium disabled:opacity-50"
       >
         {isSubmitting ? "Resetting..." : "Reset Password"}
       </Button>
     </form>
+    </div>
+    </main>
   );
 };

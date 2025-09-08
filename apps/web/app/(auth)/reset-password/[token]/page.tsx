@@ -17,7 +17,7 @@ export default async function ResetPasswordPage({ params: { token } }: Props) {
   if (!validToken) {
     return (
       <AuthLayout>
-        <div className="w-full max-w-sm text-center">
+        <div className="w-full max-w-sm text-center text-white">
           <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-destructive/10">
             <Key className="h-6 w-6 text-destructive" />
           </div>
@@ -32,7 +32,7 @@ export default async function ResetPasswordPage({ params: { token } }: Props) {
 
   return (
     <AuthLayout>
-      <div className="w-full max-w-sm">
+      <div className="w-full max-w-sm text-white">
         <h3 className="text-center text-xl font-semibold">
           Reset your password
         </h3>

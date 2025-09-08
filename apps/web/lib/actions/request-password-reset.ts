@@ -14,7 +14,7 @@ import { actionClient } from "./safe-action";
 // Request a password reset email
 export const requestPasswordResetAction = actionClient
   .schema(requestPasswordResetSchema, {
-    handleValidationErrorsShape: (ve) =>
+    handleValidationErrorsShape: async(ve) =>
       flattenValidationErrors(ve).fieldErrors,
   })
   .use(throwIfAuthenticated)
@@ -65,7 +65,7 @@ export const requestPasswordResetAction = actionClient
       email,
       react: PasswordReset({
         email,
-        resetUrl: `${process.env.NEXTAUTH_URL}/auth/reset-password/${token}`,
+        resetUrl: `${process.env.NEXTAUTH_URL}/reset-password/${token}`,
       }),
     });
 
