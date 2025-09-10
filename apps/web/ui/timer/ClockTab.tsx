@@ -5,14 +5,20 @@ interface ClockTabProps {
   formattedDate: string;
 }
 
-export const ClockTab: React.FC<ClockTabProps> = ({
-  formattedTime,
-  formattedDate,
-}) => {
+export const ClockTab: React.FC<ClockTabProps> = ({ formattedTime }) => {
+  const formattedDate = new Date()
+    .toLocaleDateString("en-US", {
+      weekday: "short",
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    })
+    .replace(/,/g, "");
+
   return (
-    <div className="flex flex-col items-center justify-center py-12">
+    <div className="flex font-mono flex-col items-center justify-center py-12">
       {/* Current Time Display */}
-      <div className="text-6xl md:text-7xl font-mono font-bold text-white mb-6 tracking-wide">
+      <div className="text-7xl md:text-7xl font-mono font-bold text-white mb-6 tracking-wide">
         {formattedTime}
       </div>
 

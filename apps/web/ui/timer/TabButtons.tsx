@@ -1,3 +1,4 @@
+import { Button } from "@repo/ui";
 import React from "react";
 
 interface TabButtonProps {
@@ -12,15 +13,13 @@ export const TabButton: React.FC<TabButtonProps> = ({
   children,
 }) => {
   return (
-    <button
+    <Button
       onClick={onClick}
-      className={`flex-1 py-3 px-6 text-sm font-medium transition-all duration-200 ${
-        active
-          ? "text-white bg-gray-700 border-b-2 border-blue-500"
-          : "text-gray-400 hover:text-gray-200 hover:bg-gray-800"
+      className={`text-base bg-[#151515] font-mono flex-1 border-2 border-subtle mx-2 hover:bg-[#151515] transition-all duration-200 ${
+        active ? "text-white border-[1px]" : "text-[#929292] "
       }`}
     >
       {children}
-    </button>
+    </Button>
   );
 };
