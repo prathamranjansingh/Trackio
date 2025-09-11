@@ -16,9 +16,9 @@ const ProductionStopwatch: React.FC = () => {
 
   return (
     <div className="bg-[#1e1e1e] border-subtle rounded-[40px] flex items-center justify-center p-4">
-      <div className="w-full max-w-2xl mx-auto">
+      <div className="w-full mx-auto">
         {/* Tab Content */}
-        <div className="p-8">
+        <div className="p-4 md:p-6">
           {activeTab === "stopwatch" ? (
             <StopwatchTab
               time={time}
@@ -27,13 +27,10 @@ const ProductionStopwatch: React.FC = () => {
               onReset={reset}
             />
           ) : (
-            <ClockTab
-              formattedTime={formattedTime}
-              formattedDate={formattedDate}
-            />
+            <ClockTab formattedTime={formattedTime} />
           )}
         </div>
-        <div className="flex">
+        <div className="flex flex-col gap-2">
           <TabButton
             active={activeTab === "stopwatch"}
             onClick={() => setActiveTab("stopwatch")}

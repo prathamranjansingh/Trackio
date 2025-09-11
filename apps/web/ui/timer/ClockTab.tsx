@@ -1,8 +1,8 @@
 import React from "react";
+import { TabContainer } from "./TabContainer";
 
 interface ClockTabProps {
   formattedTime: string;
-  formattedDate: string;
 }
 
 export const ClockTab: React.FC<ClockTabProps> = ({ formattedTime }) => {
@@ -16,21 +16,21 @@ export const ClockTab: React.FC<ClockTabProps> = ({ formattedTime }) => {
     .replace(/,/g, "");
 
   return (
-    <div className="flex font-mono flex-col items-center justify-center py-12">
-      {/* Current Time Display */}
-      <div className="text-7xl md:text-7xl font-mono font-bold text-white mb-6 tracking-wide">
+    <TabContainer>
+      {/* Current Time */}
+      <div className="text-7xl md:text-5xl font-mono font-bold text-white mb-6 tracking-wide">
         {formattedTime}
       </div>
 
-      {/* Current Date */}
+      {/* Date */}
       <div className="text-xl text-gray-300 mb-8 text-center">
         {formattedDate}
       </div>
 
-      {/* Timezone Info */}
+      {/* Timezone */}
       <div className="text-sm text-gray-400">
         {Intl.DateTimeFormat().resolvedOptions().timeZone}
       </div>
-    </div>
+    </TabContainer>
   );
 };

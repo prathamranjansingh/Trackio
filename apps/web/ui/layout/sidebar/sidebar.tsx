@@ -10,8 +10,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@trackio/ui"
-
+} from "@trackio/ui";
 
 interface Links {
   label: string;
@@ -19,16 +18,13 @@ interface Links {
   icon: React.JSX.Element | React.ReactNode;
 }
 
-
-
-
 interface SidebarDropdownProps {
   link: {
-    label: string
-    icon: React.ReactNode
-    dropdownItems: { href: string; label: string; external?: boolean }[]
-  }
-  className?: string
+    label: string;
+    icon: React.ReactNode;
+    dropdownItems: { href: string; label: string; external?: boolean }[];
+  };
+  className?: string;
 }
 
 interface SidebarContextProps {
@@ -109,11 +105,11 @@ export const DesktopSidebar = ({
     <>
       <motion.div
         className={cn(
-          "h-full px-4 py-4 hidden  md:flex md:flex-col bg-[#0F0F0F] w-[300px] shrink-0",
+          "h-full px-4 py-4 hidden  md:flex md:flex-col bg-[#0F0F0F] w-[200px] shrink-0",
           className
         )}
         animate={{
-          width: animate ? (open ? "300px" : "60px") : "300px",
+          width: animate ? (open ? "200px" : "60px") : "200px",
         }}
         onMouseEnter={() => setOpen(true)}
         onMouseLeave={() => setOpen(false)}
@@ -141,10 +137,7 @@ export const MobileSidebar = ({
         {...props}
       >
         <div className="flex justify-end z-20 w-full">
-          <IconMenu2
-            className="text-white"
-            onClick={() => setOpen(!open)}
-          />
+          <IconMenu2 className="text-white" onClick={() => setOpen(!open)} />
         </div>
 
         <AnimatePresence>
@@ -171,7 +164,6 @@ export const MobileSidebar = ({
                   className
                 )}
               >
-                
                 {children}
               </motion.div>
             </motion.div>
@@ -181,7 +173,6 @@ export const MobileSidebar = ({
     </>
   );
 };
-
 
 export const SidebarLink = ({
   link,
@@ -216,8 +207,11 @@ export const SidebarLink = ({
   );
 };
 
-export const SidebarDropdown: React.FC<SidebarDropdownProps> = ({ link, className }) => {
-  const { open, animate } = useSidebar()
+export const SidebarDropdown: React.FC<SidebarDropdownProps> = ({
+  link,
+  className,
+}) => {
+  const { open, animate } = useSidebar();
 
   return (
     <DropdownMenu>
@@ -225,13 +219,17 @@ export const SidebarDropdown: React.FC<SidebarDropdownProps> = ({ link, classNam
         <button
           className={cn(
             "flex items-center justify-start gap-2 group/sidebar py-2",
-            className,
+            className
           )}
         >
           {link.icon}
           <motion.span
             animate={{
-              display: animate ? (open ? "inline-block" : "none") : "inline-block",
+              display: animate
+                ? open
+                  ? "inline-block"
+                  : "none"
+                : "inline-block",
               opacity: animate ? (open ? 1 : 0) : 1,
             }}
             className="text-white text-sm group-hover/sidebar:translate-x-1 transition duration-150 whitespace-pre"
@@ -257,5 +255,5 @@ export const SidebarDropdown: React.FC<SidebarDropdownProps> = ({ link, classNam
         ))}
       </DropdownMenuContent>
     </DropdownMenu>
-  )
-}
+  );
+};
