@@ -10,8 +10,6 @@ export interface Session {
     email: string;
     image?: string;
     isMachine: boolean;
-    defaultWorkspace?: string;
-    defaultPartnerId?: string;
   };
 }
 

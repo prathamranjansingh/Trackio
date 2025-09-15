@@ -29,18 +29,33 @@ model User {
   invalidLoginAttempts Int       @default(0)
   lockedAt             DateTime?
 
-  createdAt        DateTime  @default(now())
-  subscribed       Boolean   @default(true) // email subscription
-  source           String? // where the user came from
-  defaultWorkspace String? // slug of the user's default workspace
-  defaultPartnerId String? // the user's default partner ID
+  createdAt      DateTime        @default(now())
+  subscribed     Boolean         @default(true) // email subscription
+  source         String? // where the user came from
   // relational data
-  accounts         Account[]
-  sessions         Session[]
-  Token            Token[]
+  codingProfiles CodingProfile[]
+
+  accounts Account[]
+  sessions Session[]
+  Token    Token[]
 
   @@index(source)
-  @@index(defaultWorkspace)
+}
+
+model CodingProfile {
+  id          String   @id @default(cuid())
+  userId      String
+  provider    String // "leetcode", "codeforces", "gfg", "codechef", ...
+  username    String // handle on provider
+  profileJson Json? // snapshot of provider profile
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, username]) // a provider username can be claimed by only one user
+  @@unique([provider, userId]) // a user can have at most one account per provider
+  @@index([userId])
 }
 
 model EmailVerificationToken {
