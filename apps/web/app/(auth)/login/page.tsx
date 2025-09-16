@@ -1,11 +1,10 @@
 import { redirect } from "next/navigation";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { authOptions, getSession } from "@/lib/auth";
 import LoginForm from "@/ui/auth/login/LoginForm";
 
 /** If the user is already authenticated, bounce them away. */
 export default async function LoginPage() {
-  const session = await getServerSession(authOptions);
+  const session = await getSession();
   if (session) redirect("/"); // or "/dashboard"
 
   return (

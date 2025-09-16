@@ -179,8 +179,9 @@ export const authOptions: NextAuthOptions = {
       ) {
         const data: any = {};
         if (!user.image) {
-          const pic =
-            (profile as any)[account.provider === "google" ? "picture" : "avatar_url"];
+          const pic = (profile as any)[
+            account.provider === "google" ? "picture" : "avatar_url"
+          ];
           if (pic) data.image = pic;
         }
         if (!user.name && profile.name) data.name = profile.name;
@@ -193,7 +194,7 @@ export const authOptions: NextAuthOptions = {
     },
 
     async jwt({ token, user, trigger }) {
-      if (user) token.user = user; // put user in token
+      if (user) token.user = user;
       if (trigger === "update" && token.sub) {
         token.user = await prisma.user.findUnique({
           where: { id: token.sub },
