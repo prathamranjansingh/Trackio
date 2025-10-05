@@ -18,7 +18,7 @@ export const ClockTab: React.FC<ClockTabProps> = ({ formattedTime }) => {
   return (
     <TabContainer>
       {/* Current Time */}
-      <div className="text-7xl md:text-5xl font-mono font-bold text-white mb-6 tracking-wide">
+      <div className="text-5xl md:text-5xl font-mono font-bold text-white mb-6 tracking-wide">
         {formattedTime}
       </div>
 

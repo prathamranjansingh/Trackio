@@ -18,7 +18,7 @@ const ProductionStopwatch: React.FC = () => {
     <div className="bg-[#1e1e1e] border-subtle rounded-[40px] flex items-center justify-center p-4">
       <div className="w-full mx-auto">
         {/* Tab Content */}
-        <div className="p-4 md:p-6">
+        <div className="p-4 md:p-6 min-h-[300px] flex flex-col items-center justify-center transition-all duration-300">
           {activeTab === "stopwatch" ? (
             <StopwatchTab
               time={time}
@@ -36,7 +36,6 @@ const ProductionStopwatch: React.FC = () => {
             onClick={() => setActiveTab("stopwatch")}
           >
             <div className="flex items-center justify-center gap-2">
-              <Timer className="w-4 h-4" />
               Stopwatch
             </div>
           </TabButton>
@@ -45,7 +44,6 @@ const ProductionStopwatch: React.FC = () => {
             onClick={() => setActiveTab("clock")}
           >
             <div className="flex items-center justify-center gap-2">
-              <Clock className="w-4 h-4" />
               Local Time
             </div>
           </TabButton>

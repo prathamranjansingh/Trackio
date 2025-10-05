@@ -99,7 +99,7 @@ export default function DashboardWithSidebar() {
           <div className="col-span-1 sm:col-span-1 lg:col-span-1 bg-green-500 min-h-[100px]">
             Streaks
           </div>
-          <div className="col-span-2 sm:col-span-2 lg:col-span-2 row-span-2 min-h-[300px]">
+          <div className="col-span-2 sm:col-span-2 lg:col-span-2 row-span-2 ">
             <ProductionStopwatch />
           </div>
           <div className="col-span-2 sm:col-span-2 lg:col-span-2 bg-yellow-500 min-h-[100px]">
