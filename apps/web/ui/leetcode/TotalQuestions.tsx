@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import useSWR from "swr";
-import { Card, CardContent } from "@trackio/ui";
+import { Skeleton } from "@trackio/ui";
 
 type LeetCodeStats = {
   totalSolved: number;
@@ -18,9 +18,7 @@ export default function TotalSolved({ username }: { username: string }) {
 
   if (isLoading) {
     return (
-      <Card className="bg-gray-50 border-gray-200 text-gray-800">
-        <CardContent className="text-center">Loading...</CardContent>
-      </Card>
+        <Skeleton className="h-4 w-[250px]" />
     );
   }
 
@@ -33,8 +31,12 @@ export default function TotalSolved({ username }: { username: string }) {
   }
 
   return (
-    <div>
-        Total Solved: {data.totalSolved}
-    </div>
+
+      <div className="text-[#D7662D] text-6xl font-extrabold font-mono">
+        {data.totalSolved} 
+      </div>
+      
+
+    
   );
 }

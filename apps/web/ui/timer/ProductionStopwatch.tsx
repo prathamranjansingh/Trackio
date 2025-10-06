@@ -44,7 +44,7 @@ const ProductionStopwatch: React.FC = () => {
             onClick={() => setActiveTab("clock")}
           >
             <div className="flex items-center justify-center gap-2">
-              Local Time
+              Localtime
             </div>
           </TabButton>
         </div>

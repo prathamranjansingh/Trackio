@@ -19,7 +19,7 @@ export const StopwatchTab: React.FC<StopwatchTabProps> = ({
   return (
     <TabContainer>
       {/* Timer Display */}
-      <div className="text-7xl md:text-5xl font-mono font-bold text-white mb-12 tracking-wide">
+      <div className="text-7xl md:text-5xl font-mono font-extrabold text-[#FF7734] mb-12 tracking-wide">
         {formatTimeWithHours(time)}
       </div>
 
@@ -27,7 +27,7 @@ export const StopwatchTab: React.FC<StopwatchTabProps> = ({
       <div className="flex gap-6">
         <button
           onClick={onToggle}
-          className="flex items-center justify-center w-16 h-16 md:w-12 md:h-12 rounded-full bg-[#151515] text-white transition-transform hover:scale-105 focus:outline-none"
+          className="flex items-center justify-center w-16 h-16 md:w-12 md:h-12 rounded-full bg-[#151515] text-[#a3a5a7]"
           aria-label={isRunning ? "Pause stopwatch" : "Start stopwatch"}
         >
           {isRunning ? (
@@ -39,7 +39,7 @@ export const StopwatchTab: React.FC<StopwatchTabProps> = ({
 
         <button
           onClick={onReset}
-          className="flex items-center justify-center w-16 h-16 md:w-12 md:h-12 rounded-full bg-[#151515] text-white transition-transform hover:scale-105 focus:outline-none "
+          className="flex items-center justify-center w-16 h-16 md:w-12 md:h-12 rounded-full bg-[#151515] text-[#a3a5a7] "
           aria-label="Reset stopwatch"
         >
           <RotateCcw className="w-6 h-6 md:w-5 md:h-5" />
