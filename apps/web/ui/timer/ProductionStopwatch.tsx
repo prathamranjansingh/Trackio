@@ -18,7 +18,7 @@ const ProductionStopwatch: React.FC = () => {
     <div className="bg-[#1e1e1e] border-subtle rounded-[40px] flex items-center justify-center p-4">
       <div className="w-full mx-auto">
         {/* Tab Content */}
-        <div className="p-4 md:p-6 min-h-[300px] flex flex-col items-center justify-center transition-all duration-300">
+        <div className="p-4 md:p-6 min-h-[220px] flex flex-col items-center justify-center transition-all duration-300">
           {activeTab === "stopwatch" ? (
             <StopwatchTab
               time={time}

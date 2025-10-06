@@ -24,7 +24,8 @@
     "packages/*"
   ],
   "dependencies": {
-    "vercel": "^47.0.5"
+    "tsup": "8.5.0",
+    "vercel": "^25.2.0"
   },
   "resolutions": {
     "next": "15.5.2",

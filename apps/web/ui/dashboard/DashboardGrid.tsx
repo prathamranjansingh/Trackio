@@ -10,6 +10,8 @@ import {
 import { motion } from "motion/react";
 import { cn } from "@trackio/ui";
 import ProductionStopwatch from "../timer/ProductionStopwatch";
+import { Streaks } from "../leetcode/Streaks";
+import TotalQuestions from "../leetcode/TotalQuestions";
 
 export default function DashboardWithSidebar() {
   const links = [
@@ -94,10 +96,10 @@ export default function DashboardWithSidebar() {
 
           {/* Socials */}
           <div className="col-span-1 sm:col-span-1 lg:col-span-1 bg-red-500 min-h-[100px]">
-            Total Questions
+            <TotalQuestions username="PrathamSingh07" />
           </div>
           <div className="col-span-1 sm:col-span-1 lg:col-span-1 bg-green-500 min-h-[100px]">
-            Streaks
+            <Streaks />
           </div>
           <div className="col-span-2 sm:col-span-2 lg:col-span-2 row-span-2 ">
             <ProductionStopwatch />

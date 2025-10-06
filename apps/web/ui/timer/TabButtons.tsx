@@ -1,4 +1,4 @@
-import { Button } from "@repo/ui";
+import { Button } from "@trackio/ui";
 import React from "react";
 
 interface TabButtonProps {

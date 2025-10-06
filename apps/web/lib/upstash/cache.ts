@@ -4,23 +4,29 @@ import { redis } from "./redis";
 
 export const cacheData = async (key: string, data: any, ttlSeconds: number): Promise<void> => {
   try {
-    const serializedData = JSON.stringify(data);
-    await redis.set(key, serializedData, { ex: ttlSeconds });
+    await redis.set(key, data, { ex: ttlSeconds });
   } catch (error) {
     console.error(error);
   }
 };
 
 
-export const getCachedData = async <T>(key:string): Promise<T | null> => {
+export const getCachedData = async <T>(key: string): Promise<T | null> => {
   try {
-    const data = await redis.get(key);
+    // FIX: The `get` method from @upstash/redis will automatically parse the JSON.
+    // `data` will be an object of type T, not a string.
+    const data = await redis.get<T>(key);
+
     if (!data) {
+      console.log(`[CACHE MISS] ${key}`);
       return null;
     }
-    return JSON.parse(data as string) as T;
+
+    console.log(`[CACHE HIT] ${key}`);
+    // FIX: Removed manual JSON.parse. This was the source of the crash.
+    return data;
   } catch (error) {
-    console.error(error);
+    console.error(`[CACHE GET ERROR] Failed to retrieve or parse cache for key "${key}":`, error);
     return null;
   }
 };
