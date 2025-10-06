@@ -66,21 +66,70 @@ function transformUserData(json: any) {
 
   return {
     username: mu.username,
+
+    // Problem solving stats
     totalSolved: (map["easy"] || 0) + (map["medium"] || 0) + (map["hard"] || 0),
     easySolved: map["easy"] || 0,
     mediumSolved: map["medium"] || 0,
     hardSolved: map["hard"] || 0,
+    acSubmissionNum: mu.submitStatsGlobal?.acSubmissionNum || [],
+    totalSubmissionNum: mu.submitStatsGlobal?.totalSubmissionNum || [],
+    problemsSolvedBeatsStats: mu.problemsSolvedBeatsStats || [],
+
+    // Calendar / streak / badges
     streak: mu.userCalendar?.streak || 0,
-    badges: mu.userCalendar?.dccBadges.map((b: any) => ({
+    submissionCalendar: mu.userCalendar?.submissionCalendar || {},
+    badges: mu.userCalendar?.dccBadges?.map((b: any) => ({
       name: b.badge.name,
       icon: b.badge.icon,
       timestamp: b.timestamp,
     })) || [],
-    ranking: mu.profile?.ranking || null,
-    contributionPoints: mu.profile?.contributionPoints || null,
-    reputation: mu.profile?.reputation || null,
+
+    // Profile info
+    profile: {
+      ranking: mu.profile?.ranking || null,
+      contributionPoints: mu.profile?.contributionPoints || null,
+      reputation: mu.profile?.reputation || null,
+      avatar: mu.profile?.userAvatar || null,
+      realName: mu.profile?.realName || null,
+      country: mu.profile?.countryName || null,
+      school: mu.profile?.school || null,
+      websites: mu.profile?.websites || [],
+      skillTags: mu.profile?.skillTags || [],
+      aboutMe: mu.profile?.aboutMe || null,
+      company: mu.profile?.company || null,
+      jobTitle: mu.profile?.jobTitle || null,
+    },
+
+    // Contest info
+    contestRanking: json.userContestRanking
+      ? {
+          attendedContests: json.userContestRanking.attendedContestsCount,
+          rating: json.userContestRanking.rating,
+          globalRanking: json.userContestRanking.globalRanking,
+          totalParticipants: json.userContestRanking.totalParticipants,
+          topPercentage: json.userContestRanking.topPercentage,
+          badge: json.userContestRanking.badge
+            ? {
+                name: json.userContestRanking.badge.name,
+                icon: json.userContestRanking.badge.icon,
+              }
+            : null,
+        }
+      : null,
+
+    contestHistory: json.userContestRankingHistory?.map((c: any) => ({
+      title: c.contest.title,
+      startTime: c.contest.startTime,
+      problemsSolved: c.problemsSolved,
+      totalProblems: c.totalProblems,
+      ranking: c.ranking,
+      rating: c.rating,
+      trendDirection: c.trendDirection,
+    })) || [],
   };
 }
+
 
 /**
  * Background revalidation (non-blocking)
