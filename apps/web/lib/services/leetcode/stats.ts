@@ -64,6 +64,24 @@ function transformUserData(json: any) {
   const map: Record<string, number> = {};
   ac.forEach((d: any) => (map[d.difficulty.toLowerCase()] = d.count));
 
+  // Filter and map only earned badges (exclude upcoming / locked)
+  const earnedBadges =
+    mu.badges
+      ?.filter(
+        (b: any) =>
+          !b.name?.toLowerCase().includes("upcoming") &&
+          !b.displayName?.toLowerCase().includes("upcoming") &&
+          !b.name?.toLowerCase().includes("locked")
+      )
+      .map((b: any) => ({
+        id: b.id,
+        name: b.displayName || b.name,
+        icon: b.icon,
+        description: b.hoverText || b.category || "",
+        creationDate: b.creationDate,
+        category: b.category,
+      })) || [];
+
   return {
     username: mu.username,
 
@@ -79,11 +97,7 @@ function transformUserData(json: any) {
     // Calendar / streak / badges
     streak: mu.userCalendar?.streak || 0,
     submissionCalendar: mu.userCalendar?.submissionCalendar || {},
-    badges: mu.userCalendar?.dccBadges?.map((b: any) => ({
-      name: b.badge.name,
-      icon: b.badge.icon,
-      timestamp: b.timestamp,
-    })) || [],
+    badges: earnedBadges,
 
     // Profile info
     profile: {
@@ -117,16 +131,6 @@ function transformUserData(json: any) {
             : null,
         }
       : null,
-
-    contestHistory: json.userContestRankingHistory?.map((c: any) => ({
-      title: c.contest.title,
-      startTime: c.contest.startTime,
-      problemsSolved: c.problemsSolved,
-      totalProblems: c.totalProblems,
-      ranking: c.ranking,
-      rating: c.rating,
-      trendDirection: c.trendDirection,
-    })) || [],
   };
 }
 

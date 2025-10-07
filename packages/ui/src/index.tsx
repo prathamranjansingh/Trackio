@@ -14,6 +14,7 @@ export * from "./components/ui/avatar";
 export * from "./components/ui/label";
 export * from "../lib/utils";
 export * from "./components/ui/card";
+export * from "./components/ui/hover-card"
 //icons
 export * from "./icons/GoogleLogo";
 export * from "./icons/GithubLogo";

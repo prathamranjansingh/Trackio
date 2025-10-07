@@ -12,6 +12,7 @@ import { cn } from "@trackio/ui";
 import ProductionStopwatch from "../timer/ProductionStopwatch";
 import Streaks from "../leetcode/Streaks";
 import TotalQuestions from "../leetcode/TotalQuestions";
+import Badges from "../leetcode/Badges";
 
 export default function DashboardWithSidebar() {
   const links = [
@@ -120,8 +121,10 @@ export default function DashboardWithSidebar() {
           <div className="col-span-2 sm:col-span-2 lg:col-span-2 row-span-2 ">
             <ProductionStopwatch />
           </div>
-          <div className="col-span-2 sm:col-span-2 lg:col-span-2 bg-yellow-500 min-h-[100px]">
-            badges
+          <div className="col-span-2 sm:col-span-2 lg:col-span-2 border border-[#373737] bg-[#171717] min-h-[220px] flex flex-col justify-center rounded-3xl gap-4 items-center">
+            <div>
+              <Badges username="leetgoat_dot_dev" />
+            </div>
           </div>
 
           {/* Location */}
