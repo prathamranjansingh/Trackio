@@ -137,7 +137,7 @@ export default function DashboardWithSidebar() {
           </div>
 
           {/* About */}
-          <div className="col-span-2 sm:col-span-2 lg:col-span-2  border border-[#373737] bg-[#171717] min-h-[400px] rounded-lg">
+          <div className="col-span-2 sm:col-span-1 lg:col-span-2  border border-[#373737] bg-[#171717] min-h-[350px] rounded-lg">
             <div className="flex-1 flex flex-col p-4 sm:p-6 items-center justify-center">
               <LeetCodeHeatmap username="PrathamSingh07" />
             </div>

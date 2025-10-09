@@ -91,11 +91,11 @@ export default function Badges({ username }: { username: string }) {
             {badges.map((badge) => (
               <Tooltip key={badge.id}>
                 <TooltipTrigger asChild>
-                  <div className="flex flex-col items-center p-4 w-32 cursor-pointer hover:scale-105 transition-transform">
+                  <div className="flex flex-col items-center p-4 w-32 [@media(min-width:1020px)]:w-20 [@media(min-width:1300px)]:w-32 cursor-pointer hover:scale-105 transition-transform">
                     <img
                       src={getBadgeIconUrl(badge)}
                       alt={badge.displayName || badge.name}
-                      className="w-20 h-20 mb-2"
+                      className="w-20 h-20 [@media(min-width:1020px)]:w-12 [@media(min-width:1020px)]:h-12 [@media(min-width:1300px)]:w-20 [@media(min-width:1300px)]:h-20 mb-2"
                     />
                   </div>
                 </TooltipTrigger>

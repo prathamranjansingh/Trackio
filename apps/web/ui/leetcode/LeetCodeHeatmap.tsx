@@ -90,7 +90,7 @@ export default function LeetCodeHeatmap({ username }: { username: string }) {
   return (
     <div className="w-full flex flex-col items-center">
       <CalendarHeatmap
-        className={cn("lg:motion-safe:[animation-delay:1000ms]")}
+        className={cn(" lg:motion-safe:[animation-delay:1000ms]")}
         variantClassnames={LeetCodeVariants}
         datesPerVariant={datesPerVariant.map((group) =>
           group.map((d) => d.date)
