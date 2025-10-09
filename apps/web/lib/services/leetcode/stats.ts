@@ -64,7 +64,6 @@ function transformUserData(json: any) {
   const map: Record<string, number> = {};
   ac.forEach((d: any) => (map[d.difficulty.toLowerCase()] = d.count));
 
-  // Filter and map only earned badges (exclude upcoming / locked)
   const earnedBadges =
     mu.badges
       ?.filter(
@@ -93,6 +92,13 @@ function transformUserData(json: any) {
     acSubmissionNum: mu.submitStatsGlobal?.acSubmissionNum || [],
     totalSubmissionNum: mu.submitStatsGlobal?.totalSubmissionNum || [],
     problemsSolvedBeatsStats: mu.problemsSolvedBeatsStats || [],
+
+    // Tag-specific problem counts
+    tagProblemCounts: mu.tagProblemCounts || {
+      advanced: [],
+      intermediate: [],
+      fundamental: [],
+    },
 
     // Calendar / streak / badges
     streak: mu.userCalendar?.streak || 0,
@@ -133,6 +139,7 @@ function transformUserData(json: any) {
       : null,
   };
 }
+
 
 
 /**

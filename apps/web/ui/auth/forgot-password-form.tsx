@@ -43,13 +43,16 @@ export const ForgotPasswordForm = () => {
               autoFocus
               value={email}
               placeholder="john.doe@example.com"
-              onChange={(e) => setEmail(e.target.value)}
+              className=""
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
             />
           </label>
           <Button
             type="submit"
             disabled={isPending || email.length < 3}
             className="w-full text-white py-2 font-medium disabled:opacity-50"
+            variant="default"
+            size="default"
           >
             {isPending ? "Sending..." : "Send reset link"}
           </Button>

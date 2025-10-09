@@ -10,8 +10,11 @@
     "declaration": true,
     "declarationMap": true,
     "jsx": "react-jsx",
+    "noImplicitAny": false,
+    "skipLibCheck": true,
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["src/*"],
+      "lib/*": ["lib/*"]
     }
   }
 }

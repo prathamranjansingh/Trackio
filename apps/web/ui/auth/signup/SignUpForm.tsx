@@ -96,6 +96,8 @@ export default function SignUpForm() {
             onClick={() => signIn("google")}
             className="w-full border bg-white hover:bg-gray-200 border-white py-2 font-medium text-black"
             disabled={loading}
+            variant="default"
+            size="default"
           >
             <GoogleLogo />
             Continue with Google
@@ -104,6 +106,8 @@ export default function SignUpForm() {
             onClick={() => signIn("github")}
             className="w-full border bg-white hover:bg-gray-200 border-white py-2 font-medium text-black"
             disabled={loading}
+            variant="default"
+            size="default"
           >
             <GithubLogo />
             Continue with GitHub
@@ -131,7 +135,7 @@ export default function SignUpForm() {
                 className="w-full border px-3 py-2 mt-1"
                 placeholder="you@work.com"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
               />
             </div>
 
@@ -139,6 +143,8 @@ export default function SignUpForm() {
               type="submit"
               className="w-full py-2 text-white"
               disabled={!email || loading}
+              variant="default"
+              size="default"
             >
               {loading ? "Sending..." : "Sign Up"}
             </Button>
@@ -154,6 +160,7 @@ export default function SignUpForm() {
               </label>
               <Input
                 id="code"
+                type="text"
                 inputMode="numeric"
                 pattern="\d{6}"
                 required
@@ -161,7 +168,7 @@ export default function SignUpForm() {
                 className="w-full rounded border px-3 py-2 font-mono tracking-[0.25em] mt-1"
                 placeholder="123456"
                 value={code}
-                onChange={(e) => setCode(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCode(e.target.value)}
               />
             </div>
 
@@ -176,7 +183,7 @@ export default function SignUpForm() {
                 className="w-full rounded border px-3 py-2 mt-1"
                 placeholder="Create password (min 8 chars)"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
               />
             </div>
 
@@ -184,6 +191,8 @@ export default function SignUpForm() {
               type="submit"
               className="w-full rounded bg-black py-2 text-white disabled:opacity-50"
               disabled={code.length !== 6 || password.length < 8 || loading}
+              variant="default"
+              size="default"
             >
               {loading ? "Verifying..." : "Verify & Sign Up"}
             </Button>

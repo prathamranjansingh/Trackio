@@ -13,6 +13,8 @@ import ProductionStopwatch from "../timer/ProductionStopwatch";
 import Streaks from "../leetcode/Streaks";
 import TotalQuestions from "../leetcode/TotalQuestions";
 import Badges from "../leetcode/Badges";
+import { TopicAnalysis } from "../leetcode/TopicAnalysis";
+import LeetCodeHeatmap from "../leetcode/LeetCodeHeatmap";
 
 export default function DashboardWithSidebar() {
   const links = [
@@ -128,13 +130,17 @@ export default function DashboardWithSidebar() {
           </div>
 
           {/* Location */}
-          <div className="col-span-2 sm:col-span-2 lg:col-span-1 bg-pink-500 min-h-[150px]">
-            leetcode topics
+          <div className="col-span-2 sm:col-span-2 lg:col-span-4 flex flex-col border border-[#373737] bg-[#171717] rounded-lg shadow-md min-h-[400px] sm:min-h-[350px] overflow-hidden">
+            <div className="flex-1 flex flex-col p-4 sm:p-6">
+              <TopicAnalysis username="leetgoat_dot_dev" />
+            </div>
           </div>
 
           {/* About */}
-          <div className="col-span-2 sm:col-span-2 lg:col-span-4 bg-purple-500 min-h-[150px]">
-            heatmap
+          <div className="col-span-2 sm:col-span-2 lg:col-span-2  border border-[#373737] bg-[#171717] min-h-[400px] rounded-lg">
+            <div className="flex-1 flex flex-col p-4 sm:p-6 items-center justify-center">
+              <LeetCodeHeatmap username="PrathamSingh07" />
+            </div>
           </div>
 
           {/* Email */}

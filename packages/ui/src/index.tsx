@@ -13,8 +13,19 @@ export * from "./components/ui/breadcrumb";
 export * from "./components/ui/avatar";
 export * from "./components/ui/label";
 export * from "../lib/utils";
-export * from "./components/ui/card";
+export * from "./components/ui/CalendarHeatmap"
+export {
+  Card,
+  CardHeader,
+  CardFooter,
+  CardTitle,
+  CardAction,
+  CardDescription,
+  CardContent,
+} from "./components/ui/card";
 export * from "./components/ui/hover-card"
+export * from "./components/ui/charts"
+export type { ChartConfig } from "./components/ui/charts"
 //icons
 export * from "./icons/GoogleLogo";
 export * from "./icons/GithubLogo";

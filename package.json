@@ -24,8 +24,10 @@
     "packages/*"
   ],
   "dependencies": {
+    "react-day-picker": "^8.10.1",
+    "recharts": "^3.2.1",
     "tsup": "8.5.0",
-    "vercel": "^25.2.0"
+    "vercel": "^48.2.7"
   },
   "resolutions": {
     "next": "15.5.2",

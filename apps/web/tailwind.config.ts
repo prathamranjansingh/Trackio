@@ -15,6 +15,22 @@ const config: Config = {
         sans: ["var(--font-geist-sans)", "ui-sans-serif", "system-ui"],
         mono: ["var(--font-geist-mono)", "ui-monospace", "monospace"],
       },
+      keyframes: {
+        "fade-up": {
+          "0%": {
+            opacity: "0",
+            transform: "translateY(10px)",
+          },
+          "100%": {
+            opacity: "1",
+            transform: "translateY(0)",
+          },
+        },
+      },
+      // The `animation` key needs to be inside `theme.extend`
+      animation: {
+        "fade-up": "fade-up 0.5s ease-out forwards",
+      },
     },
   },
 };

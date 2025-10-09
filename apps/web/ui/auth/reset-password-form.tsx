@@ -82,9 +82,10 @@ export const ResetPasswordForm = () => {
         <Input
           type="password"
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
           required
           autoComplete="new-password"
+          className=""
         />
         {errors.password && (
           <span
@@ -104,9 +105,10 @@ export const ResetPasswordForm = () => {
         <Input
           type="password"
           value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setConfirmPassword(e.target.value)}
           required
           autoComplete="new-password"
+          className=""
         />
         {errors.confirmPassword && (
           <span
@@ -123,6 +125,8 @@ export const ResetPasswordForm = () => {
         type="submit"
         disabled={isSubmitting}
          className="w-full text-white py-2 font-medium disabled:opacity-50"
+        variant="default"
+        size="default"
       >
         {isSubmitting ? "Resetting..." : "Reset Password"}
       </Button>

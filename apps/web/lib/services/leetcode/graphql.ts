@@ -6,6 +6,23 @@ export const LEETCODE_FULL_STATS_QUERY = `
     }
     matchedUser(username: $username) {
       username
+      tagProblemCounts {
+        advanced {
+          tagName
+          tagSlug
+          problemsSolved
+        }
+        intermediate {
+          tagName
+          tagSlug
+          problemsSolved
+        }
+        fundamental {
+          tagName
+          tagSlug
+          problemsSolved
+        }
+      }
       profile {
         ranking
         reputation
