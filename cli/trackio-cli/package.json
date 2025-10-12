@@ -1,0 +1,9 @@
+{
+  "name": "codetracker-cli",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "go build -o ../../dist/cli/codetracker-cli-linux-amd64 && GOOS=windows go build -o ../../dist/cli/codetracker-cli-win32-x64.exe",
+    "lint": "gofmt -l ."
+  }
+}

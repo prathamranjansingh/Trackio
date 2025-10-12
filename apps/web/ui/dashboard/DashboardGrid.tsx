@@ -100,22 +100,22 @@ export default function DashboardWithSidebar() {
           {/* Socials */}
           <div
             className="col-span-1 sm:col-span-1 lg:col-span-1 
-                bg-[#311B12] border rounded-3xl border-[#4d3c33] 
+                bg-[#FEB61C] border rounded-3xl border-[#4d3c33] 
                 flex flex-col justify-between items-center p-2"
           >
             <div className="flex justify-center w-full mt-2">
               <TotalQuestions username="PrathamSingh07" />
             </div>
-            <div className="text-[#b15f36] flex flex-col text-sm font-light font-mono text-center">
+            <div className="text-[#450102] flex flex-col text-sm font-medium font-mono text-center">
               <div>Total</div>
               <div>Questions</div>
             </div>
           </div>
-          <div className="col-span-1 sm:col-span-1 lg:col-span-1 border border-[#2967A7] bg-[#01274A] rounded-3xl flex flex-col justify-between gap-4 items-center p-2">
+          <div className="col-span-1 sm:col-span-1 lg:col-span-1 bg-[#FE4C20] rounded-3xl flex flex-col justify-between gap-4 items-center p-2">
             <div className="flex justify-center w-full mt-2">
               <Streaks username="PrathamSingh07" />
             </div>
-            <div className="flex flex-col text-sm font-light font-mono text-center text-[#84b2df]">
+            <div className="flex flex-col text-sm font-medium font-mono text-center text-white">
               <div>Max</div>
               <div>Streak</div>
             </div>

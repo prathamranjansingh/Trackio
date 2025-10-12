@@ -18,17 +18,17 @@ export const ClockTab: React.FC<ClockTabProps> = ({ formattedTime }) => {
   return (
     <TabContainer>
       {/* Current Time */}
-      <div className="text-5xl md:text-5xl font-mono font-extrabold text-[#D7662D] mb-6 tracking-wide">
+      <div className="font-obviously text-9xl md:text-8xl font-extrabold text-black mb-6 tracking-wide">
         {formattedTime}
       </div>
 
       {/* Date */}
-      <div className="text-xl font-medium text-[#747678] mb-8 text-center">
+      <div className="text-xl font-mono font-medium text-black mb-8 text-center">
         {formattedDate}
       </div>
 
       {/* Timezone */}
-      <div className="text-sm text-[#747678]">
+      <div className="text-sm text-black">
         {Intl.DateTimeFormat().resolvedOptions().timeZone}
       </div>
     </TabContainer>

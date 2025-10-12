@@ -11,6 +11,12 @@ const geistSans = localFont({
   weight: "100 900", // because it’s a variable font
 });
 
+const obviouslyFont = localFont({
+  src: "./fonts/ObviouslyVariable.woff2",
+  variable: "--font-obviously",
+  weight: "100 900", // because it’s a variable font
+});
+
 const geistMono = localFont({
   src: "./fonts/GeistMonoVF.woff",
   variable: "--font-geist-mono",
@@ -30,7 +36,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[#0F0F0F] font-sans`}
+        className={`${obviouslyFont.variable} ${geistSans.variable} ${geistMono.variable} antialiased bg-[#0F0F0F] font-sans`}
       >
         <RootProviders>{children}</RootProviders>
       </body>

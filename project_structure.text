@@ -2,41 +2,31 @@
 - .npmrc
 - .turbo
   - cache
+    - 8442cb439bc25a37-meta.json
+    - 8442cb439bc25a37.tar.zst
+    - a6d2a566ccbc61b5-meta.json
+    - a6d2a566ccbc61b5.tar.zst
   - cookies
-    - 1.cookie
   - daemon
     - 5ee278737f73a6a9-turbo.log.2025-09-05
     - 5ee278737f73a6a9-turbo.log.2025-09-06
     - 5ee278737f73a6a9-turbo.log.2025-09-08
+    - 5ee278737f73a6a9-turbo.log.2025-09-10
+    - 5ee278737f73a6a9-turbo.log.2025-09-11
+    - 5ee278737f73a6a9-turbo.log.2025-09-15
+    - 5ee278737f73a6a9-turbo.log.2025-09-16
+    - 5ee278737f73a6a9-turbo.log.2025-10-05
+    - 5ee278737f73a6a9-turbo.log.2025-10-06
+    - 5ee278737f73a6a9-turbo.log.2025-10-08
+    - 5ee278737f73a6a9-turbo.log.2025-10-09
+  - preferences
+    - tui.json
 - apps
-  - docs
-    - .gitignore
-    - app
-      - favicon.ico
-      - fonts
-        - GeistMonoVF.woff
-        - GeistVF.woff
-      - globals.css
-      - layout.tsx
-      - page.module.css
-      - page.tsx
-    - eslint.config.js
-    - next-env.d.ts
-    - next.config.js
-    - package.json
-    - public
-      - file-text.svg
-      - globe.svg
-      - next.svg
-      - turborepo-dark.svg
-      - turborepo-light.svg
-      - vercel.svg
-      - window.svg
-    - README.md
-    - tsconfig.json
   - web
     - .env
     - .gitignore
+    - .turbo
+      - turbo-check-types.log
     - app
       - (auth)
         - forgot-password
@@ -58,6 +48,13 @@
             - route.ts
           - [...nextauth]
             - route.ts
+        - coding-profiles
+          - route.ts
+        - leetcode
+          - [username]
+            - route.ts
+      - dashboard
+        - page.tsx
       - favicon.ico
       - fonts
         - GeistMonoVF.woff
@@ -87,6 +84,9 @@
         - password.ts
         - session.ts
         - utils.ts
+      - coding-profile
+        - index.ts
+        - leetcode.ts
       - edge-config
         - index.ts
         - is-blacklisted-domain.ts
@@ -98,6 +98,11 @@
         - app.ts
         - get-user-via-token.ts
         - parse.ts
+      - services
+        - codingProfileService.ts
+        - leetcode
+          - graphql.ts
+          - stats.ts
       - types.ts
       - upstash
         - cache.ts
@@ -108,6 +113,7 @@
         - index.ts
         - schemas
           - auth.ts
+    - middleware.ts
     - next-env.d.ts
     - next.config.js
     - package.json
@@ -133,11 +139,34 @@
         - reset-password-form.tsx
         - signup
           - SignUpForm.tsx
+      - dashboard
+        - CardWrapper.tsx
+        - DashboardGrid.tsx
       - layout
         - auth-layout.tsx
         - sidebar
           - sidebar.tsx
         - sidebar.tsx
+      - leetcode
+        - Badges.tsx
+        - LeetCodeHeatmap.tsx
+        - Streaks.tsx
+        - TopicAnalysis.tsx
+        - TotalQuestions.tsx
+      - timer
+        - ClockTab.tsx
+        - ProductionStopwatch.tsx
+        - StopwatchTab.tsx
+        - TabButtons.tsx
+        - TabContainer.tsx
+- dist
+  - apps
+    - web
+      - lib
+        - auth
+          - hash-token.js
+  - generate-token.js
+- generate-token.ts
 - package-lock.json
 - package.json
 - packages
@@ -179,6 +208,8 @@
       - migrations
         - 20250905173005_1
           - migration.sql
+        - 20250916173512_codingprofile
+          - migration.sql
         - migration_lock.toml
       - schema.prisma
   - tailwind-config
@@ -192,12 +223,12 @@
     - package.json
     - react-library.json
   - ui
+    - .turbo
+      - turbo-check-types.log
     - components.json
     - dist
-      - index.cjs
       - index.css
       - index.d.ts
-      - index.js
       - index.mjs
     - lib
       - utils.ts
@@ -209,9 +240,12 @@
           - avatar.tsx
           - breadcrumb.tsx
           - button.tsx
+          - CalendarHeatmap.tsx
           - card.tsx
+          - charts.tsx
           - collapsible.tsx
           - dropdown-menu.tsx
+          - hover-card.tsx
           - input.tsx
           - label.tsx
           - separator.tsx
@@ -228,29 +262,60 @@
       - index.tsx
       - styles
         - globals.css
+      - types
+        - recharts-augment.d.ts
     - tailwind.config.ts
     - tsconfig.json
     - tsup.config.ts
   - utils
+    - .turbo
+      - turbo-check-types.log
     - dist
+      - chunk-4RPJAVOY.mjs
+      - chunk-DALAM2UJ.mjs
       - chunk-EEVR76LV.mjs
+      - chunk-LJUGP36D.mjs
+      - chunk-MR4JSNGF.mjs
+      - chunk-OO7EJUZQ.mjs
       - chunk-PMOQSSOL.mjs
+      - chunk-PN63AWSC.mjs
+      - chunk-S7T4Y2Q5.mjs
       - chunk-TQI6HB26.mjs
+      - chunk-UAI7YC3Q.mjs
+      - chunk-UEGDE2YW.mjs
+      - chunk-WTBIA4RA.mjs
+      - constant
+        - index.d.ts
+        - index.mjs
+        - main.d.ts
+        - main.mjs
       - functions
         - capitalize.d.ts
         - capitalize.mjs
         - index.d.ts
         - index.mjs
+        - timeUtils.d.ts
+        - timeUtils.mjs
         - urls.d.ts
         - urls.mjs
+        - useCurrentTime.d.ts
+        - useCurrentTime.mjs
+        - useStopwatch.d.ts
+        - useStopwatch.mjs
       - index.d.ts
       - index.mjs
     - package.json
     - src
+      - constant
+        - index.ts
+        - main.ts
       - functions
         - capitalize.ts
         - index.ts
+        - timeUtils.ts
         - urls.ts
+        - useCurrentTime.ts
+        - useStopwatch.ts
       - index.ts
     - tsconfig.json
     - tsup.config.ts

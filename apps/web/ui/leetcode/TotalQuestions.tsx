@@ -17,26 +17,20 @@ export default function TotalSolved({ username }: { username: string }) {
   );
 
   if (isLoading) {
-    return (
-        <Skeleton className="h-4 w-[250px]" />
-    );
+    return <Skeleton className="h-4 w-[250px]" />;
   }
 
   if (error || !data) {
     return (
       <div className=" text-red-800">
-          <p>Error loading stats: {error?.message || "No data available"}</p>
-        </div>
+        <p>Error loading stats: {error?.message || "No data available"}</p>
+      </div>
     );
   }
 
   return (
-
-      <div className="text-[#D7662D] text-6xl font-extrabold font-mono">
-        {data.totalSolved} 
-      </div>
-      
-
-    
+    <div className="text-[#450102] text-8xl font-obviously">
+      {data.totalSolved}
+    </div>
   );
 }

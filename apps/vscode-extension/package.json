@@ -1,0 +1,62 @@
+{
+  "name": "codetracker",
+  "displayName": "Code Tracker",
+  "description": "Your personal coding activity tracker.",
+  "version": "0.1.0",
+  "publisher": "Trackio",
+  "engines": {
+    "vscode": "^1.82.0"
+  },
+  "main": "./dist/extension.js",
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "contributes": {
+    "commands": [
+      { "command": "codetracker.setApiKey", "title": "Code Tracker: Set API Key" },
+      { "command": "codetracker.openDashboard", "title": "Code Tracker: Open Dashboard" },
+      { "command": "codetracker.openConfigFile", "title": "Code Tracker: Open Config File" },
+      { "command": "codetracker.promptForDebug", "title": "Code Tracker: Toggle Debug Mode" },
+      { "command": "codetracker.toggleExtension", "title": "Code Tracker: Enable/Disable" },
+      { "command": "codetracker.toggleStatusBar", "title": "Code Tracker: Toggle Status Bar Icon" }
+    ],
+    "configuration": {
+      "title": "Code Tracker",
+      "properties": {
+        "codetracker.apiKey": {
+          "type": "string",
+          "default": "",
+          "description": "API Key from your Code Tracker dashboard."
+        },
+        "codetracker.debug": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable verbose logging for debugging."
+        },
+        "codetracker.statusBarEnabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show the Code Tracker icon in the status bar."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.82.0",
+    "@types/lodash.debounce": "^4.0.9",
+    "@types/adm-zip": "^0.5.5",
+    "@types/request": "^2.48.12",
+    "@types/node": "20.x",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "lodash.debounce": "^4.0.8",
+    "adm-zip": "^0.5.10",
+    "request": "^2.88.2"
+  }
+}

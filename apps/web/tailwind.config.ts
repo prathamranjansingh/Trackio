@@ -14,6 +14,7 @@ const config: Config = {
       fontFamily: {
         sans: ["var(--font-geist-sans)", "ui-sans-serif", "system-ui"],
         mono: ["var(--font-geist-mono)", "ui-monospace", "monospace"],
+        obviously: ["var(--font-obviously)", "sans-serif"],
       },
       keyframes: {
         "fade-up": {

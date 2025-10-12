@@ -29,8 +29,6 @@ export default function Streaks({ username }: { username: string }) {
   }
 
   return (
-    <div className="text-white text-6xl font-extrabold font-mono">
-      {data.streak} 
-    </div>
+    <div className="text-white text-8xl font-obviously">{data.streak}</div>
   );
 }
