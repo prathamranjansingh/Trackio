@@ -21,7 +21,8 @@
   "packageManager": "npm@11.4.2",
   "workspaces": [
     "apps/*",
-    "packages/*"
+    "packages/*",
+    "cli/*"
   ],
   "dependencies": {
     "react-day-picker": "^8.10.1",

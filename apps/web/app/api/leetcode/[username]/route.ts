@@ -8,19 +8,17 @@ interface Params {
 /**
  * GET /api/leetcode/[username]
  * Fetches LeetCode stats for a given username.
- * Handles both dev and production modes safely.
  */
-export async function GET(
-  req: Request,
-  context: { params: Params | Promise<Params> }
-) {
+export async function GET(req: Request, context: { params: Promise<Params> }) {
   try {
-    // Resolve params (handles Promise in dev mode)
-    const resolvedParams = context.params instanceof Promise ? await context.params : context.params;
-    const username = resolvedParams?.username;
+    // Await params (always a Promise in Next.js 15)
+    const { username } = await context.params;
 
     if (!username) {
-      return NextResponse.json({ error: "Username is required" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Username is required" },
+        { status: 400 }
+      );
     }
 
     // Fetch stats (caching handled internally)
