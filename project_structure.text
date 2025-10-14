@@ -12,14 +12,13 @@
     - 826f5c3d4a4565a9.tar.zst
     - 8442cb439bc25a37-meta.json
     - 8442cb439bc25a37.tar.zst
+    - 92ff9a22df094c55-meta.json
+    - 92ff9a22df094c55.tar.zst
     - a6d2a566ccbc61b5-meta.json
     - a6d2a566ccbc61b5.tar.zst
     - c16a15a4b8d5178f-meta.json
     - c16a15a4b8d5178f.tar.zst
   - cookies
-    - 2.cookie
-    - 3.cookie
-    - 4.cookie
   - daemon
     - 5ee278737f73a6a9-turbo.log.2025-09-05
     - 5ee278737f73a6a9-turbo.log.2025-09-06
@@ -34,11 +33,19 @@
     - 5ee278737f73a6a9-turbo.log.2025-10-09
     - 5ee278737f73a6a9-turbo.log.2025-10-12
     - 5ee278737f73a6a9-turbo.log.2025-10-13
+    - 5ee278737f73a6a9-turbo.log.2025-10-14
   - preferences
     - tui.json
 - apps
   - vscode-extension
     - .vscodeignore
+    - cli
+      - codetracker-cli-win32-x64.exe
+    - dist
+      - extension.js
+      - extension.js.map
+      - wakatime.js
+      - wakatime.js.map
     - package.json
     - src
       - extension.ts
@@ -186,11 +193,13 @@
         - TabButtons.tsx
         - TabContainer.tsx
 - cli
+  - go.mod
   - trackio-cli
     - .turbo
       - cookies
       - daemon
         - eb5f469bb3d5a0ea-turbo.log.2025-10-12
+      - turbo-build.log
     - main.go
     - package.json
 - dist
@@ -199,6 +208,9 @@
       - lib
         - auth
           - hash-token.js
+  - cli
+    - codetracker-cli-linux-amd64
+    - codetracker-cli-win32-x64.exe
   - generate-token.js
 - generate-token.ts
 - package-lock.json
@@ -245,6 +257,8 @@
         - 20250916173512_codingprofile
           - migration.sql
         - 20251013154329_extension_api
+          - migration.sql
+        - 20251014190812_heartbeat
           - migration.sql
         - migration_lock.toml
       - schema.prisma
