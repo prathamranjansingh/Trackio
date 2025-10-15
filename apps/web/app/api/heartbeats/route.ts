@@ -1,34 +1,57 @@
 import { NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient();
-export async function POST(request: Request) {
-  const apiKey = request.headers.get("x-api-key");
+import { prisma } from "@trackio/prisma";
+import { createHash } from "crypto";
 
-  if (!apiKey) {
+function hashApiKey(key: string): string {
+  return createHash("sha256").update(key).digest("hex");
+}
+
+export async function POST(request: Request) {
+  const rawApiKey = request.headers.get("x-api-key");
+
+  // ADD THIS LOG to see the exact key the extension is sending.
+  console.log("Raw API Key received from header:", rawApiKey);
+
+  if (!rawApiKey) {
     return NextResponse.json({ error: "API Key is missing" }, { status: 401 });
   }
 
   try {
-    const user = await prisma.user.findFirst({
-      where: { apiKey: apiKey }, // In production, this would be a hashed key
+    const hashedKey = hashApiKey(rawApiKey);
+
+    // ADD THIS LOG to see the hash your backend generates.
+    console.log("Generated hash:", hashedKey);
+
+    const apiKeyRecord = await prisma.extensionApiKey.findUnique({
+      where: { hashedKey: hashedKey },
+      include: {
+        user: true,
+      },
     });
 
-    if (!user) {
+    if (!apiKeyRecord || !apiKeyRecord.user) {
+      console.log(
+        "Authentication failed: No matching hashedKey found in the database."
+      );
       return NextResponse.json({ error: "Invalid API Key" }, { status: 401 });
     }
 
-    // 2. Process the heartbeats
+    const user = apiKeyRecord.user;
+
     const heartbeats = await request.json();
     console.log(
       `Received ${heartbeats.length} heartbeats for user: ${user.id}`
     );
 
-    // Here, you would add the logic to process and save the heartbeats
-    // to your database, linking them to the authenticated user.
-    // For now, we just log them.
+    prisma.extensionApiKey
+      .update({
+        where: { id: apiKeyRecord.id },
+        data: { lastUsed: new Date() },
+      })
+      .catch(console.error);
 
     return NextResponse.json(
-      { message: "Heartbeats received successfully" },
+      { message: "Heartbeats received" },
       { status: 202 }
     );
   } catch (error) {

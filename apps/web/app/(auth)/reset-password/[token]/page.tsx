@@ -5,13 +5,17 @@ import { Key } from "lucide-react";
 
 export const runtime = "nodejs";
 
-interface Props {
-  params: {
+// In Next.js 15, params is now a Promise
+interface PageProps {
+  params: Promise<{
     token: string;
-  };
+  }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
-export default async function ResetPasswordPage({ params: { token } }: Props) {
+export default async function ResetPasswordPage(props: PageProps) {
+  // Await the params promise to get the actual token value
+  const { token } = await props.params;
   const validToken = await isValidToken(token);
 
   if (!validToken) {
@@ -23,7 +27,8 @@ export default async function ResetPasswordPage({ params: { token } }: Props) {
           </div>
           <h3 className="text-xl font-semibold">Invalid Reset Token</h3>
           <p className="mt-2 text-sm text-muted-foreground">
-            The password reset token is invalid or expired. Please request a new one.
+            The password reset token is invalid or expired. Please request a new
+            one.
           </p>
         </div>
       </AuthLayout>
@@ -59,4 +64,3 @@ const isValidToken = async (token: string) => {
 
   return !!resetToken;
 };
-

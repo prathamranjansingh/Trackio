@@ -2,10 +2,22 @@
 - .npmrc
 - .turbo
   - cache
+    - 2972dfd893cad7ab-meta.json
+    - 2972dfd893cad7ab.tar.zst
+    - 29bdebf124467053-meta.json
+    - 29bdebf124467053.tar.zst
+    - 7881016529c718e8-meta.json
+    - 7881016529c718e8.tar.zst
+    - 826f5c3d4a4565a9-meta.json
+    - 826f5c3d4a4565a9.tar.zst
     - 8442cb439bc25a37-meta.json
     - 8442cb439bc25a37.tar.zst
+    - 92ff9a22df094c55-meta.json
+    - 92ff9a22df094c55.tar.zst
     - a6d2a566ccbc61b5-meta.json
     - a6d2a566ccbc61b5.tar.zst
+    - c16a15a4b8d5178f-meta.json
+    - c16a15a4b8d5178f.tar.zst
   - cookies
   - daemon
     - 5ee278737f73a6a9-turbo.log.2025-09-05
@@ -19,13 +31,31 @@
     - 5ee278737f73a6a9-turbo.log.2025-10-06
     - 5ee278737f73a6a9-turbo.log.2025-10-08
     - 5ee278737f73a6a9-turbo.log.2025-10-09
+    - 5ee278737f73a6a9-turbo.log.2025-10-12
+    - 5ee278737f73a6a9-turbo.log.2025-10-13
+    - 5ee278737f73a6a9-turbo.log.2025-10-14
   - preferences
     - tui.json
 - apps
+  - vscode-extension
+    - .vscodeignore
+    - cli
+      - codetracker-cli-win32-x64.exe
+    - dist
+      - extension.js
+      - extension.js.map
+      - wakatime.js
+      - wakatime.js.map
+    - package.json
+    - src
+      - extension.ts
+      - wakatime.ts
+    - tsconfig.json
   - web
     - .env
     - .gitignore
     - .turbo
+      - turbo-build.log
       - turbo-check-types.log
     - app
       - (auth)
@@ -50,6 +80,8 @@
             - route.ts
         - coding-profiles
           - route.ts
+        - heartbeats
+          - route.ts
         - leetcode
           - [username]
             - route.ts
@@ -59,6 +91,7 @@
       - fonts
         - GeistMonoVF.woff
         - GeistVF.woff
+        - ObviouslyVariable.woff2
       - globals.css
       - layout.tsx
       - page.module.css
@@ -159,12 +192,25 @@
         - StopwatchTab.tsx
         - TabButtons.tsx
         - TabContainer.tsx
+- cli
+  - go.mod
+  - trackio-cli
+    - .turbo
+      - cookies
+      - daemon
+        - eb5f469bb3d5a0ea-turbo.log.2025-10-12
+      - turbo-build.log
+    - main.go
+    - package.json
 - dist
   - apps
     - web
       - lib
         - auth
           - hash-token.js
+  - cli
+    - codetracker-cli-linux-amd64
+    - codetracker-cli-win32-x64.exe
   - generate-token.js
 - generate-token.ts
 - package-lock.json
@@ -210,6 +256,10 @@
           - migration.sql
         - 20250916173512_codingprofile
           - migration.sql
+        - 20251013154329_extension_api
+          - migration.sql
+        - 20251014190812_heartbeat
+          - migration.sql
         - migration_lock.toml
       - schema.prisma
   - tailwind-config
@@ -224,6 +274,7 @@
     - react-library.json
   - ui
     - .turbo
+      - turbo-build.log
       - turbo-check-types.log
     - components.json
     - dist
@@ -269,6 +320,7 @@
     - tsup.config.ts
   - utils
     - .turbo
+      - turbo-build.log
       - turbo-check-types.log
     - dist
       - chunk-4RPJAVOY.mjs
