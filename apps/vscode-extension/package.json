@@ -1,42 +1,47 @@
 {
   "name": "codetracker",
   "displayName": "Code Tracker",
-  "description": "Your personal coding activity tracker.",
+  "description": "Automatic time tracking for your coding activity.",
   "version": "0.1.0",
-  "publisher": "Trackio",
+  "publisher": "YourPublisherName",
   "engines": {
-    "vscode": "^1.82.0"
+    "vscode": "^1.80.0"
   },
-  "main": "./dist/extension.js",
+  "categories": [
+    "Other"
+  ],
   "activationEvents": [
     "onStartupFinished"
   ],
+  "main": "./dist/extension.js",
   "contributes": {
     "commands": [
-      { "command": "codetracker.setApiKey", "title": "Code Tracker: Set API Key" },
-      { "command": "codetracker.openDashboard", "title": "Code Tracker: Open Dashboard" },
-      { "command": "codetracker.openConfigFile", "title": "Code Tracker: Open Config File" },
-      { "command": "codetracker.promptForDebug", "title": "Code Tracker: Toggle Debug Mode" },
-      { "command": "codetracker.toggleExtension", "title": "Code Tracker: Enable/Disable" },
-      { "command": "codetracker.toggleStatusBar", "title": "Code Tracker: Toggle Status Bar Icon" }
+      {
+        "command": "codetracker.setApiKey",
+        "title": "Code Tracker: Set API Key"
+      },
+      {
+        "command": "codetracker.openDashboard",
+        "title": "Code Tracker: Open Dashboard"
+      }
     ],
     "configuration": {
       "title": "Code Tracker",
       "properties": {
         "codetracker.apiKey": {
           "type": "string",
-          "default": "",
-          "description": "API Key from your Code Tracker dashboard."
+          "description": "Your personal API key for Code Tracker.",
+          "scope": "machine-overridable" 
         },
-        "codetracker.debug": {
-          "type": "boolean",
-          "default": false,
-          "description": "Enable verbose logging for debugging."
+        "codetracker.apiUrl": {
+          "type": "string",
+          "default": "http://localhost:3000/api/heartbeats",
+          "description": "The API endpoint URL to send heartbeats to."
         },
-        "codetracker.statusBarEnabled": {
+        "codetracker.statusBarVisibility": {
           "type": "boolean",
           "default": true,
-          "description": "Show the Code Tracker icon in the status bar."
+          "description": "Show/hide the Code Tracker icon in the status bar."
         }
       }
     }
@@ -44,19 +49,18 @@
   "scripts": {
     "vscode:prepublish": "npm run compile",
     "compile": "tsc -p ./",
-    "watch": "tsc -watch -p ./"
+    "watch": "tsc -watch -p ./",
+    "lint": "eslint src --ext ts"
   },
   "devDependencies": {
-    "@types/vscode": "^1.82.0",
     "@types/lodash.debounce": "^4.0.9",
-    "@types/adm-zip": "^0.5.5",
-    "@types/request": "^2.48.12",
-    "@types/node": "20.x",
-    "typescript": "^5.3.3"
+    "@types/node": "^20.x.x",
+    "@types/vscode": "^1.80.0",
+    "eslint": "^8.x.x",
+    "typescript": "^5.x.x",
+    "@vscode/vsce": "^2.x.x"
   },
   "dependencies": {
-    "lodash.debounce": "^4.0.8",
-    "adm-zip": "^0.5.10",
-    "request": "^2.88.2"
+    "lodash.debounce": "^4.0.8"
   }
 }

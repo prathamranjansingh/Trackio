@@ -1,5 +1,7 @@
-.vscode/**
-node_modules/**
-src/**
+dist/
+src/
+node_modules/
+out/
+*.vsix
 tsconfig.json
-.DS_Store
+.npmrc

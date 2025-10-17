@@ -36,6 +36,9 @@
   },
   "overrides": {
     "next": "15.5.2",
-    "next-auth": "4.24.11"
+    "next-auth": "4.24.11",
+    "react-day-picker": {
+      "react": "19.1.1"
+    }
   }
 }
