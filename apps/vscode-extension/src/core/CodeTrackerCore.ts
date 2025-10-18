@@ -98,7 +98,12 @@ export class CodeTrackerCore implements vscode.Disposable {
       return;
     }
     const heartbeat = createHeartbeat(editor.document, false, this.isDebugging);
+
+    // --- LOGGING ADDED HERE ---
+    console.log("Heartbeat Created:", JSON.stringify(heartbeat, null, 2));
+
     this.heartbeatQueue.push(heartbeat);
+    console.log(`Queue size is now: ${this.heartbeatQueue.length}`);
   }
 
   private async sendHeartbeatsFromQueue(
@@ -129,6 +134,12 @@ export class CodeTrackerCore implements vscode.Disposable {
     console.log(
       `${EXTENSION_NAME}: Sending batch of ${batchToSend.length} from ${timezone}.`
     );
+
+    // --- LOGGING ADDED HERE ---
+    console.log("--- Batch Content Being Sent ---");
+    console.log(JSON.stringify(payload, null, 2));
+    console.log("---------------------------------");
+
     if (!isShutdown)
       this.statusBar.update("$(sync~spin) Sending...", "Sending activity...");
 
@@ -185,7 +196,7 @@ export class CodeTrackerCore implements vscode.Disposable {
   }
 
   private async sendCachedBatch(): Promise<void> {
-    const cachedPayload = await this.cache.loadAndClearCachedBatchPayload(); // <-- FIXED
+    const cachedPayload = await this.cache.loadAndClearCachedBatchPayload();
     if (cachedPayload?.heartbeats?.length) {
       this.heartbeatQueue.unshift(...cachedPayload.heartbeats);
       await this.sendHeartbeatsFromQueue();
@@ -248,7 +259,7 @@ export class CodeTrackerCore implements vscode.Disposable {
         timezone: timezone,
         heartbeats: this.heartbeatQueue,
       };
-      this.cache.savePayloadToDisk(finalPayload); // <-- FIXED
+      this.cache.savePayloadToDisk(finalPayload);
     }
 
     this.disposables.forEach((d) => d.dispose());
