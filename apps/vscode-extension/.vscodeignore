@@ -1,7 +1,26 @@
-dist/
+# Ignore all node_modules folders, at any depth
+**/node_modules
+
+# Ignore all source files
 src/
-node_modules/
-out/
-*.vsix
+
+# Ignore config and build scripts
+.vscode/
 tsconfig.json
+esbuild.mjs
 .npmrc
+
+# Ignore git files
+.git*
+
+# Ignore environment files
+**/.env*
+
+# Ignore test files
+test/
+
+# Ignore bundler output maps in production package
+dist/**/*.map
+
+# Ignore the output vsix file itself
+*.vsix

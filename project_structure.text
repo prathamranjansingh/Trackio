@@ -2,68 +2,105 @@
 - .npmrc
 - .turbo
   - cache
-    - 2972dfd893cad7ab-meta.json
-    - 2972dfd893cad7ab.tar.zst
-    - 29bdebf124467053-meta.json
-    - 29bdebf124467053.tar.zst
-    - 7881016529c718e8-meta.json
-    - 7881016529c718e8.tar.zst
-    - 826f5c3d4a4565a9-meta.json
-    - 826f5c3d4a4565a9.tar.zst
-    - 8442cb439bc25a37-meta.json
-    - 8442cb439bc25a37.tar.zst
-    - 92ff9a22df094c55-meta.json
-    - 92ff9a22df094c55.tar.zst
-    - a6d2a566ccbc61b5-meta.json
-    - a6d2a566ccbc61b5.tar.zst
-    - bd5f5dcd2c2e580d-meta.json
-    - bd5f5dcd2c2e580d.tar.zst
-    - c16a15a4b8d5178f-meta.json
-    - c16a15a4b8d5178f.tar.zst
-    - c3180e0ae0395e47-meta.json
-    - c3180e0ae0395e47.tar.zst
   - cookies
     - 1.cookie
-    - 10.cookie
     - 2.cookie
     - 3.cookie
     - 4.cookie
-    - 5.cookie
-    - 6.cookie
-    - 7.cookie
-    - 8.cookie
-    - 9.cookie
   - daemon
-    - 5ee278737f73a6a9-turbo.log.2025-09-05
-    - 5ee278737f73a6a9-turbo.log.2025-09-06
-    - 5ee278737f73a6a9-turbo.log.2025-09-08
-    - 5ee278737f73a6a9-turbo.log.2025-09-10
-    - 5ee278737f73a6a9-turbo.log.2025-09-11
-    - 5ee278737f73a6a9-turbo.log.2025-09-15
-    - 5ee278737f73a6a9-turbo.log.2025-09-16
-    - 5ee278737f73a6a9-turbo.log.2025-10-05
-    - 5ee278737f73a6a9-turbo.log.2025-10-06
-    - 5ee278737f73a6a9-turbo.log.2025-10-08
-    - 5ee278737f73a6a9-turbo.log.2025-10-09
-    - 5ee278737f73a6a9-turbo.log.2025-10-12
-    - 5ee278737f73a6a9-turbo.log.2025-10-13
-    - 5ee278737f73a6a9-turbo.log.2025-10-14
-  - preferences
-    - tui.json
+    - 5ee278737f73a6a9-turbo.log.2025-10-17
 - apps
   - vscode-extension
     - .vscodeignore
+    - CHANGELOG.md
     - cli
-      - codetracker-cli-win32-x64.exe
+      - codetracker-cli-darwin-amd64
+      - codetracker-cli-darwin-arm64
+      - codetracker-cli-linux-amd64
+      - codetracker-cli-win32-amd64.exe
     - dist
+      - core
+        - CodeTrackerCore.js
+        - CodeTrackerCore.js.map
+        - Heartbeat.js
+        - Heartbeat.js.map
+        - types.js
+        - types.js.map
       - extension.js
       - extension.js.map
+      - ui
+        - commands.js
+        - commands.js.map
+        - statusBar.js
+        - statusBar.js.map
+      - utils
+        - cache.js
+        - cache.js.map
+        - cli.js
+        - cli.js.map
+        - config.js
+        - config.js.map
+        - constants.js
+        - constants.js.map
       - wakatime.js
       - wakatime.js.map
+    - esbuild.mjs
+    - LICENSE
+    - out
+      - package
+        - CHANGELOG.md
+        - cli
+          - codetracker-cli-darwin-amd64
+          - codetracker-cli-darwin-arm64
+          - codetracker-cli-linux-amd64
+          - codetracker-cli-win32-amd64.exe
+        - dist
+          - core
+            - CodeTrackerCore.js
+            - CodeTrackerCore.js.map
+            - Heartbeat.js
+            - Heartbeat.js.map
+            - types.js
+            - types.js.map
+          - extension.js
+          - extension.js.map
+          - ui
+            - commands.js
+            - commands.js.map
+            - statusBar.js
+            - statusBar.js.map
+          - utils
+            - cache.js
+            - cache.js.map
+            - cli.js
+            - cli.js.map
+            - config.js
+            - config.js.map
+            - constants.js
+            - constants.js.map
+          - wakatime.js
+          - wakatime.js.map
+        - esbuild.mjs
+        - LICENSE
+        - package.json
+        - README.md
+    - package.js
     - package.json
+    - README.md
     - src
+      - core
+        - CodeTrackerCore.ts
+        - Heartbeat.ts
+        - types.ts
       - extension.ts
-      - wakatime.ts
+      - ui
+        - commands.ts
+        - statusBar.ts
+      - utils
+        - cache.ts
+        - cli.ts
+        - config.ts
+        - constants.ts
     - tsconfig.json
   - web
     - .env
@@ -99,6 +136,8 @@
         - leetcode
           - [username]
             - route.ts
+        - worker
+          - route.ts
       - dashboard
         - page.tsx
       - favicon.ico

@@ -4,6 +4,10 @@
   "description": "Automatic time tracking for your coding activity.",
   "version": "0.1.0",
   "publisher": "YourPublisherName",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/your-repo-name.git"
+  },
   "engines": {
     "vscode": "^1.80.0"
   },
@@ -14,6 +18,13 @@
     "onStartupFinished"
   ],
   "main": "./dist/extension.js",
+  "scripts": {
+    "clean": "rimraf dist",
+    "build": "npm run clean && webpack --mode production",
+    "dev": "npm run clean && webpack --mode development --watch",
+    "lint": "eslint src --ext ts",
+    "package": "npm run build && vsce package --no-dependencies --out ."
+  },
   "contributes": {
     "commands": [
       {
@@ -23,6 +34,10 @@
       {
         "command": "codetracker.openDashboard",
         "title": "Code Tracker: Open Dashboard"
+      },
+      {
+        "command": "codetracker.forceSendBatch",
+        "title": "Code Tracker: Force Send Batch (Debug)"
       }
     ],
     "configuration": {
@@ -31,7 +46,7 @@
         "codetracker.apiKey": {
           "type": "string",
           "description": "Your personal API key for Code Tracker.",
-          "scope": "machine-overridable" 
+          "scope": "machine-overridable"
         },
         "codetracker.apiUrl": {
           "type": "string",
@@ -46,19 +61,17 @@
       }
     }
   },
-  "scripts": {
-    "vscode:prepublish": "npm run compile",
-    "compile": "tsc -p ./",
-    "watch": "tsc -watch -p ./",
-    "lint": "eslint src --ext ts"
-  },
   "devDependencies": {
     "@types/lodash.debounce": "^4.0.9",
-    "@types/node": "^20.x.x",
+    "@types/node": "^20.11.24",
     "@types/vscode": "^1.80.0",
-    "eslint": "^8.x.x",
-    "typescript": "^5.x.x",
-    "@vscode/vsce": "^2.x.x"
+    "@vscode/vsce": "^2.24.0",
+    "eslint": "^8.57.0",
+    "rimraf": "^5.0.5",
+    "ts-loader": "^9.5.1",
+    "typescript": "^5.3.3",
+    "webpack": "^5.91.0",
+    "webpack-cli": "^5.1.4"
   },
   "dependencies": {
     "lodash.debounce": "^4.0.8"
