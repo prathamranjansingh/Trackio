@@ -60,19 +60,36 @@ export class CodeTrackerCore implements vscode.Disposable {
 
   private async completeInitialization(): Promise<void> {
     if (this.isInitialized) return;
-    console.log(`${EXTENSION_NAME}: Initializing with API Key.`);
+    console.log(`${EXTENSION_NAME}: Initializing with API Key.`); // You see this
 
-    this.statusBar.update("$(watch) Code Tracker", "Loading cached data...");
-    await this.sendCachedBatch();
+    // --- Add try/catch around cache loading ---
+    try {
+      console.log(">>> [Init] About to call sendCachedBatch <<<"); // ADDED
+      await this.sendCachedBatch();
+      console.log(">>> [Init] Finished calling sendCachedBatch <<<"); // ADDED
+    } catch (cacheError) {
+      console.error(
+        "!!! [Init] CRITICAL ERROR during sendCachedBatch:",
+        cacheError
+      ); // ADDED
+      // Decide if you want to continue initialization or stop if cache fails
+    }
+    // --- End try/catch ---
+
+    console.log(">>> [Init] About to call setupEventListeners <<<"); // ADDED
     this.setupEventListeners();
+    console.log(">>> [Init] Finished calling setupEventListeners <<<"); // ADDED
 
+    console.log(">>> [Init] About to set interval timer <<<"); // ADDED
     this.sendIntervalId = setInterval(
       () => this.sendHeartbeatsFromQueue(),
       BATCH_SEND_INTERVAL_MS
     );
+    console.log(">>> [Init] Finished setting interval timer <<<"); // ADDED
 
     this.statusBar.update("$(watch) Code Tracker", "Activity tracking active.");
-    this.isInitialized = true;
+    this.isInitialized = true; // Mark initialized at the very end
+    console.log(">>> [Init] completeInitialization FINISHED <<<"); // ADDED
   }
 
   private setupEventListeners(): void {
@@ -196,11 +213,28 @@ export class CodeTrackerCore implements vscode.Disposable {
   }
 
   private async sendCachedBatch(): Promise<void> {
-    const cachedPayload = await this.cache.loadAndClearCachedBatchPayload();
-    if (cachedPayload?.heartbeats?.length) {
-      this.heartbeatQueue.unshift(...cachedPayload.heartbeats);
-      await this.sendHeartbeatsFromQueue();
+    console.log(">>> [sendCachedBatch] Function ENTERED <<<"); // ADDED
+    try {
+      // Add try/catch here too
+      const cachedPayload = await this.cache.loadAndClearCachedBatchPayload();
+      if (cachedPayload?.heartbeats?.length) {
+        console.log(
+          `[sendCachedBatch] Found ${cachedPayload.heartbeats.length} heartbeats. Adding to queue.`
+        );
+        this.heartbeatQueue.unshift(...cachedPayload.heartbeats);
+        console.log(`[sendCachedBatch] >>> About to send cached batch NOW <<<`); // ADDED
+        await this.sendHeartbeatsFromQueue();
+        console.log(`[sendCachedBatch] <<< Finished sending cached batch >>>`); // ADDED
+      } else {
+        console.log(`[sendCachedBatch] No cached payload found.`);
+      }
+    } catch (loadError) {
+      console.error(
+        "!!! [sendCachedBatch] CRITICAL ERROR loading/sending cache:",
+        loadError
+      ); // ADDED
     }
+    console.log(">>> [sendCachedBatch] Function EXITED <<<"); // ADDED
   }
 
   public async promptForApiKey(): Promise<void> {
@@ -253,6 +287,9 @@ export class CodeTrackerCore implements vscode.Disposable {
     this.shutdown(false);
     this.debouncedHeartbeatCreator.flush();
 
+    console.log(
+      `[Dispose] Heartbeat queue size before saving: ${this.heartbeatQueue.length}`
+    );
     if (this.heartbeatQueue.length > 0) {
       const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
       const finalPayload: BatchPayload = {
@@ -260,6 +297,9 @@ export class CodeTrackerCore implements vscode.Disposable {
         heartbeats: this.heartbeatQueue,
       };
       this.cache.savePayloadToDisk(finalPayload);
+    } else {
+      console.log(`[Dispose] Heartbeat queue was empty. Clearing cache.`); // ADDED
+      this.cache.clearCache();
     }
 
     this.disposables.forEach((d) => d.dispose());
