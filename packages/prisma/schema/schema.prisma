@@ -19,95 +19,68 @@ model User {
   invalidLoginAttempts Int       @default(0)
   lockedAt             DateTime?
   createdAt            DateTime  @default(now())
-  subscribed           Boolean   @default(true)
-  source               String?
+  subscribed           Boolean   @default(true) // Consider if needed
+  source               String? // Consider if needed
 
-  // relational data
+  // Relational data - Keep these
   codingProfiles   CodingProfile[]   @relation("UserCodingProfiles")
   accounts         Account[]
   sessions         Session[]
   Token            Token[]
   extensionApiKeys ExtensionApiKey[] @relation("UserExtensionApiKeys")
 
-  // --- NEW RELATIONSHIPS ADDED HERE ---
-  projects       Project[]      @relation("UserProjects")
-  heartbeats     Heartbeat[]    @relation("UserHeartbeats")
-  dailySummaries DailySummary[] @relation("UserDailySummaries")
+  // --- NEW RELATIONSHIPS TO SUMMARY TABLES ---
+  dailyProjectSummaries DailyProjectSummary[] @relation("UserDailyProjectSummaries")
+  dailyActivityTotals   DailyActivityTotal[]  @relation("UserDailyActivityTotals")
 
-  @@index(source)
+  @@index([source]) // Consider if needed
 }
 
 // ---------------------------------
-// --- NEW MODELS START HERE ---
+// --- NEW SUMMARY MODELS START HERE ---
 // ---------------------------------
 
-// MODEL 1: Raw event log. This table stores every coding event and can grow very large.
-model Heartbeat {
-  id        String   @id @default(cuid())
-  entity    String // The file path, e.g., "/Users/jane/dev/api/src/index.ts"
-  language  String?
-  time      DateTime // The exact timestamp of the coding activity
-  isWrite   Boolean  @default(false)
-  createdAt DateTime @default(now())
+// Stores aggregated data per project/language/category for a specific day.
+// Used for showing detailed graphs (Today, 7 days, 30 days).
+// Data older than your retention period (e.g., 7-35 days) can be deleted from here.
+model DailyProjectSummary {
+  id               String   @id @default(cuid())
+  userId           String
+  project_name     String
+  language         String? // Nullable if language isn't relevant/detected
+  category         String // "coding" or "debugging"
+  date             DateTime @db.Date // Store only the date part
+  duration_seconds Int      @default(0)
 
-  user   User   @relation("UserHeartbeats", fields: [userId], references: [id], onDelete: Cascade)
-  userId String
+  user User @relation("UserDailyProjectSummaries", fields: [userId], references: [id], onDelete: Cascade)
 
-  project   Project? @relation("ProjectHeartbeats", fields: [projectId], references: [id], onDelete: SetNull)
-  projectId String?
-
-  @@index([userId, time]) // ESSENTIAL index for fast queries by user and time
+  @@unique([userId, date, project_name, language, category])
+  @@index([userId, date])
 }
 
-// MODEL 2: A dedicated table for projects. This is modular and scalable.
-model Project {
-  id            String   @id @default(cuid())
-  name          String // The project name from the editor, e.g., "Trackio"
-  repositoryUrl String?
-  createdAt     DateTime @default(now())
+model DailyActivityTotal {
+  userId                  String
+  date                    DateTime @db.Date // Store only the date part
+  total_coding_seconds    Int      @default(0)
+  total_debugging_seconds Int      @default(0)
 
-  user   User   @relation("UserProjects", fields: [userId], references: [id], onDelete: Cascade)
-  userId String
+  user User @relation("UserDailyActivityTotals", fields: [userId], references: [id], onDelete: Cascade)
 
-  heartbeats     Heartbeat[]    @relation("ProjectHeartbeats")
-  dailySummaries DailySummary[] @relation("ProjectDailySummaries")
-
-  @@unique([userId, name]) // A user cannot have two projects with the same name
+  @@id([userId, date]) // Use a composite primary key
+  @@index([userId, date])
 }
 
-// MODEL 3: The key to frontend performance. This table stores pre-calculated summaries.
-model DailySummary {
-  id           String   @id @default(cuid())
-  date         DateTime @db.Date // Stores only the date, e.g., 2025-10-15
-  totalSeconds Int // Total seconds coded for this specific combination
-
-  user   User   @relation("UserDailySummaries", fields: [userId], references: [id], onDelete: Cascade)
-  userId String
-
-  project   Project? @relation("ProjectDailySummaries", fields: [projectId], references: [id], onDelete: SetNull)
-  projectId String?
-
-  language String
-
-  // This unique constraint ensures data integrity.
-  @@unique([userId, date, projectId, language])
-  @@index([userId, date]) // ESSENTIAL index for fast timeline queries
-}
-
-// ---------------------------------
-// --- NO CHANGES TO MODELS BELOW ---
-// ---------------------------------
-
+// CLI Codegen Models
 model ExtensionApiKey {
   id         String    @id @default(cuid())
-  name       String
+  name       String?
   hashedKey  String    @unique
-  partialKey String
+  partialKey String // Store the first few chars for display purposes
   lastUsed   DateTime?
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
-  user       User      @relation("UserExtensionApiKeys", fields: [userId], references: [id], onDelete: Cascade)
   userId     String
+  user       User      @relation("UserExtensionApiKeys", fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
 }
@@ -115,16 +88,16 @@ model ExtensionApiKey {
 model CodingProfile {
   id          String   @id @default(cuid())
   userId      String
-  provider    String
+  provider    String // e.g., "leetcode", "github"
   username    String
-  profileJson Json?
+  profileJson Json? // Store raw data fetched from the provider API
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
   user User @relation("UserCodingProfiles", fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, username])
-  @@unique([provider, userId])
+  @@unique([provider, userId]) // A user should only have one profile per provider
   @@index([userId])
 }
 
@@ -154,15 +127,15 @@ model PasswordResetToken {
 
 model Token {
   id         String    @id @default(cuid())
-  name       String
+  name       String?
   hashedKey  String    @unique
   partialKey String
   expires    DateTime?
   lastUsed   DateTime?
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
-  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId     String
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
 }
@@ -181,7 +154,8 @@ model Account {
   scope                    String?
   id_token                 String?
   session_state            String?
-  user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
   @@index([userId])

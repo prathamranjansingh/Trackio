@@ -1,9 +1,18 @@
 {
-  "name": "codetracker-cli",
-  "version": "1.0.0",
+  "name": "trackio-cli",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build": "set \"GOCACHE=%USERPROFILE%\\AppData\\Local\\go-build\" && set \"GOOS=linux\" && set \"GOARCH=amd64\" && go build -o ../../dist/cli/codetracker-cli-linux-amd64 && set \"GOOS=windows\" && set \"GOARCH=amd64\" && go build -o ../../dist/cli/codetracker-cli-win32-x64.exe",
-    "lint": "gofmt -l ."
+    "build": "cross-env GOCACHE=%TEMP%\\.gocache go build -ldflags=\"-s -w\" -o ../../apps/vscode-extension/cli/codetracker-cli-win32-amd64.exe main.go",
+    "build:all": "npm run build:linux-amd64 && npm run build:darwin-amd64 && npm run build:darwin-arm64 && npm run build:windows-amd64",
+    "build:linux-amd64": "cross-env GOOS=linux GOARCH=amd64 go build -ldflags=\"-s -w\" -o ../../apps/vscode-extension/cli/codetracker-cli-linux-amd64 main.go",
+    "build:darwin-amd64": "cross-env GOOS=darwin GOARCH=amd64 go build -ldflags=\"-s -w\" -o ../../apps/vscode-extension/cli/codetracker-cli-darwin-amd64 main.go",
+    "build:darwin-arm64": "cross-env GOOS=darwin GOARCH=arm64 go build -ldflags=\"-s -w\" -o ../../apps/vscode-extension/cli/codetracker-cli-darwin-arm64 main.go",
+    "build:windows-amd64": "cross-env GOCACHE=%TEMP%\\.gocache GOOS=windows GOARCH=amd64 go build -ldflags=\"-s -w\" -o ../../apps/vscode-extension/cli/codetracker-cli-win32-amd64.exe main.go",
+    "clean": "go clean && rimraf ../../apps/vscode-extension/cli/codetracker-cli-*"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "rimraf": "^6.0.1"
   }
 }

@@ -1,31 +1,28 @@
 import * as vscode from "vscode";
-import { WakaTime } from "./wakatime";
+import { CodeTrackerCore } from "./core/CodeTrackerCore";
+import { registerCommands } from "./ui/commands";
 
-let wakatime: WakaTime;
+let core: CodeTrackerCore | undefined;
 
-export function activate(context: vscode.ExtensionContext) {
-  wakatime = new WakaTime(context);
-  wakatime.initialize();
+export async function activate(
+  context: vscode.ExtensionContext
+): Promise<void> {
+  console.log("Code Tracker extension is activating...");
 
-  context.subscriptions.push(wakatime);
+  core = new CodeTrackerCore(context);
+  await core.initialize(); // Initialize checks API key, CLI, etc.
 
   // Register all user-facing commands
-  context.subscriptions.push(
-    vscode.commands.registerCommand("codetracker.setApiKey", () =>
-      wakatime.promptForApiKey()
-    ),
-    vscode.commands.registerCommand("codetracker.openDashboard", () =>
-      wakatime.openDashboardWebsite()
-    ),
-    vscode.commands.registerCommand("codetracker.toggleExtension", () =>
-      wakatime.promptToDisable()
-    ),
-    vscode.commands.registerCommand("codetracker.toggleStatusBar", () =>
-      wakatime.promptStatusBarIcon()
-    )
-  );
+  registerCommands(context, core);
+
+  context.subscriptions.push(core); // Add core to subscriptions so dispose is called
+
+  console.log("Code Tracker extension activated.");
 }
 
-export function deactivate() {
-  wakatime?.dispose();
+export function deactivate(): void {
+  console.log("Code Tracker extension deactivating...");
+  // Dispose will be called automatically by VS Code on the 'core' instance
+  // because we added it to context.subscriptions
+  console.log("Code Tracker extension deactivated.");
 }

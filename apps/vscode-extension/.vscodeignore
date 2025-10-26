@@ -1,5 +1,26 @@
-.vscode/**
-node_modules/**
-src/**
+# Ignore all node_modules folders, at any depth
+**/node_modules
+
+# Ignore all source files
+src/
+
+# Ignore config and build scripts
+.vscode/
 tsconfig.json
-.DS_Store
+esbuild.mjs
+.npmrc
+
+# Ignore git files
+.git*
+
+# Ignore environment files
+**/.env*
+
+# Ignore test files
+test/
+
+# Ignore bundler output maps in production package
+dist/**/*.map
+
+# Ignore the output vsix file itself
+*.vsix

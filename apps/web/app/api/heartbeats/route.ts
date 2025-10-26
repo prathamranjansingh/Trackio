@@ -1,63 +1,180 @@
 import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+import crypto from "crypto";
+import { redis } from "@/lib/upstash/redis";
 import { prisma } from "@trackio/prisma";
-import { createHash } from "crypto";
+import { z } from "zod";
 
-function hashApiKey(key: string): string {
-  return createHash("sha256").update(key).digest("hex");
+const QUEUE_KEY = "tracker_queue";
+const MAX_HEARTBEATS_PER_BATCH = 1000;
+const RATE_LIMIT_WINDOW = 60;
+const RATE_LIMIT_MAX_REQUESTS = 100;
+
+const HeartbeatSchema = z.object({
+  time: z
+    .number()
+    .positive()
+    .transform((val) => Math.floor(val)),
+  project: z.string().min(1).max(255),
+  language: z.string().max(50).optional(),
+  category: z.enum(["coding", "debugging"]),
+});
+
+const PayloadSchema = z.object({
+  heartbeats: z.array(HeartbeatSchema).min(1).max(MAX_HEARTBEATS_PER_BATCH),
+  timezone: z.string().max(50).default("UTC"),
+});
+
+interface QueueMessage {
+  userId: string;
+  timezone: string;
+  batch: z.infer<typeof HeartbeatSchema>[];
+  timestamp: number;
 }
 
-export async function POST(request: Request) {
-  const rawApiKey = request.headers.get("x-api-key");
+function hashApiKey(apiKey: string): string {
+  return crypto.createHash("sha256").update(apiKey).digest("hex");
+}
 
-  // ADD THIS LOG to see the exact key the extension is sending.
-  console.log("Raw API Key received from header:", rawApiKey);
-
-  if (!rawApiKey) {
-    return NextResponse.json({ error: "API Key is missing" }, { status: 401 });
-  }
-
+async function checkRateLimit(userId: string): Promise<boolean> {
   try {
-    const hashedKey = hashApiKey(rawApiKey);
+    const rateLimitKey = `ratelimit:heartbeat:${userId}`;
+    const current = await redis.incr(rateLimitKey);
 
-    // ADD THIS LOG to see the hash your backend generates.
-    console.log("Generated hash:", hashedKey);
-
-    const apiKeyRecord = await prisma.extensionApiKey.findUnique({
-      where: { hashedKey: hashedKey },
-      include: {
-        user: true,
-      },
-    });
-
-    if (!apiKeyRecord || !apiKeyRecord.user) {
-      console.log(
-        "Authentication failed: No matching hashedKey found in the database."
-      );
-      return NextResponse.json({ error: "Invalid API Key" }, { status: 401 });
+    if (current === 1) {
+      await redis.expire(rateLimitKey, RATE_LIMIT_WINDOW);
     }
 
-    const user = apiKeyRecord.user;
+    return current <= RATE_LIMIT_MAX_REQUESTS;
+  } catch {
+    return true;
+  }
+}
 
-    const heartbeats = await request.json();
+function isValidTimezone(tz: string): boolean {
+  try {
+    Intl.DateTimeFormat(undefined, { timeZone: tz });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+export async function POST(req: NextRequest) {
+  const startTime = Date.now();
+  let userId: string | undefined;
+
+  try {
+    const plainTextApiKey = req.headers.get("x-api-key");
+
+    if (!plainTextApiKey) {
+      return NextResponse.json({ error: "Missing API key" }, { status: 401 });
+    }
+
+    if (plainTextApiKey.length === 0 || plainTextApiKey.length > 256) {
+      return NextResponse.json(
+        { error: "Invalid API key format" },
+        { status: 401 }
+      );
+    }
+
+    const hashedKey = hashApiKey(plainTextApiKey);
+
+    const apiKeyRecord = await Promise.race([
+      prisma.extensionApiKey.findUnique({
+        where: { hashedKey },
+        select: { userId: true },
+      }),
+      new Promise<null>((_, reject) =>
+        setTimeout(() => reject(new Error("Database timeout")), 5000)
+      ),
+    ]).catch(() => null);
+
+    if (!apiKeyRecord) {
+      return NextResponse.json({ error: "Invalid API key" }, { status: 401 });
+    }
+
+    userId = apiKeyRecord.userId;
+
+    const withinRateLimit = await checkRateLimit(userId);
+    if (!withinRateLimit) {
+      return NextResponse.json(
+        {
+          error: "Rate limit exceeded",
+          retryAfter: RATE_LIMIT_WINDOW,
+        },
+        {
+          status: 429,
+          headers: {
+            "Retry-After": RATE_LIMIT_WINDOW.toString(),
+          },
+        }
+      );
+    }
+
+    const rawBody = await req.json().catch(() => null);
+
+    if (!rawBody) {
+      return NextResponse.json(
+        { error: "Invalid JSON payload" },
+        { status: 400 }
+      );
+    }
+
+    const validationResult = PayloadSchema.safeParse(rawBody);
+
+    if (!validationResult.success) {
+      return NextResponse.json(
+        {
+          error: "Invalid payload format",
+          details: validationResult.error.issues.map((e) => ({
+            path: e.path.join("."),
+            message: e.message,
+          })),
+        },
+        { status: 400 }
+      );
+    }
+
+    const { heartbeats, timezone } = validationResult.data;
+
+    if (!isValidTimezone(timezone)) {
+      return NextResponse.json({ error: "Invalid timezone" }, { status: 400 });
+    }
+
+    const queueMessage: QueueMessage = {
+      userId,
+      timezone,
+      batch: heartbeats,
+      timestamp: Date.now(),
+    };
+
+    try {
+      await redis.lpush(QUEUE_KEY, queueMessage);
+    } catch (redisError) {
+      console.error(`[Heartbeat] Redis error for user ${userId}:`, redisError);
+      return NextResponse.json(
+        { error: "Failed to queue heartbeats" },
+        { status: 503 }
+      );
+    }
+
+    const processingTime = Date.now() - startTime;
     console.log(
-      `Received ${heartbeats.length} heartbeats for user: ${user.id}`
+      `[Heartbeat] Queued ${heartbeats.length} heartbeats for user ${userId} (${processingTime}ms)`
     );
 
-    prisma.extensionApiKey
-      .update({
-        where: { id: apiKeyRecord.id },
-        data: { lastUsed: new Date() },
-      })
-      .catch(console.error);
-
     return NextResponse.json(
-      { message: "Heartbeats received" },
+      {
+        message: "Batch accepted",
+        count: heartbeats.length,
+      },
       { status: 202 }
     );
   } catch (error) {
-    console.error("Error processing heartbeats:", error);
+    console.error(`[Heartbeat] Error:`, error);
     return NextResponse.json(
-      { error: "Internal Server Error" },
+      { error: "Internal server error" },
       { status: 500 }
     );
   }
