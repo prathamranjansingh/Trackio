@@ -23,10 +23,14 @@ export class CacheManager {
       };
       try {
         await this.context.globalState.update(CACHE_KEY, cachedData);
+        console.log(
+          `[CacheManager] Successfully saved payload to globalState.`
+        );
       } catch (error) {
         console.error("Failed to save heartbeat cache:", error);
       }
     } else {
+      console.log(`[CacheManager] Queue empty, ensuring cache is clear.`);
       await this.clearCache();
     }
   }
