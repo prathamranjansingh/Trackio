@@ -16,16 +16,18 @@ export function DashboardProfileCard({ user }: { user: User }) {
   if (isProfileComplete) {
     // STATE 1: Profile is complete
     return (
-      <div className="flex h-full flex-col items-center justify-center rounded-lg bg-gray-900 p-6 text-white">
+      <div className="flex h-full flex-col items-center justify-center p-6 text-black">
         <Avatar className="h-24 w-24">
           <AvatarImage src={user.image || undefined} alt="Profile picture" />
           <AvatarFallback className="text-3xl">
             {getInitials(user.name)}
           </AvatarFallback>
         </Avatar>
-        <h2 className="mt-4 text-2xl font-bold">{user.name}</h2>
-        <p className="text-md text-gray-400">@{user.username}</p>
-        <p className="mt-4 text-center text-sm text-gray-300">
+        <h2 className="mt-4 text-6xl font-bold">{user.name}</h2>
+        <p className="font-mono text-md font-normal text-black">
+          @{user.username}
+        </p>
+        <p className="mt-4 text-center text-sm font-mono">
           Welcome to your coding dashboard. All your stats, all in one place.
         </p>
       </div>
@@ -34,12 +36,13 @@ export function DashboardProfileCard({ user }: { user: User }) {
 
   // STATE 2: Profile is incomplete
   return (
-    <div className="flex h-full flex-col items-center justify-center rounded-lg bg-gray-900 p-6 text-white">
+    <div className="flex h-full flex-col items-center justify-center rounded-lg p-6 text-black">
       <Avatar className="h-24 w-24">
         <AvatarFallback className="text-3xl">👻</AvatarFallback>
       </Avatar>
       <h2 className="mt-4 text-2xl font-bold">
-        No username? No problem! Pick one and flex your digital swagger!
+        Vibes incoming... but unnamed? No problem! Pick one and flex your
+        digital swagger!
       </h2>
       <p className="mt-4 text-center text-sm text-gray-300">
         Your profile is incomplete. Set your name and a unique username to join
