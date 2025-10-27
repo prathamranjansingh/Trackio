@@ -27,7 +27,9 @@
     "cli/*"
   ],
   "dependencies": {
+    "@hookform/resolvers": "^5.2.2",
     "react-day-picker": "^8.10.1",
+    "react-hook-form": "^7.65.0",
     "recharts": "^3.2.1",
     "tsup": "8.5.0",
     "vercel": "^48.2.7"

@@ -1,0 +1,53 @@
+"use client";
+
+import Link from "next/link";
+import { Avatar, AvatarFallback, AvatarImage, Button } from "@trackio/ui";
+import { getInitials } from "@trackio/utils"; // Your modular function
+
+type User = {
+  name: string | null;
+  username: string | null;
+  image: string | null;
+};
+
+export function DashboardProfileCard({ user }: { user: User }) {
+  const isProfileComplete = user.name && user.username;
+
+  if (isProfileComplete) {
+    // STATE 1: Profile is complete
+    return (
+      <div className="flex h-full flex-col items-center justify-center rounded-lg bg-gray-900 p-6 text-white">
+        <Avatar className="h-24 w-24">
+          <AvatarImage src={user.image || undefined} alt="Profile picture" />
+          <AvatarFallback className="text-3xl">
+            {getInitials(user.name)}
+          </AvatarFallback>
+        </Avatar>
+        <h2 className="mt-4 text-2xl font-bold">{user.name}</h2>
+        <p className="text-md text-gray-400">@{user.username}</p>
+        <p className="mt-4 text-center text-sm text-gray-300">
+          Welcome to your coding dashboard. All your stats, all in one place.
+        </p>
+      </div>
+    );
+  }
+
+  // STATE 2: Profile is incomplete
+  return (
+    <div className="flex h-full flex-col items-center justify-center rounded-lg bg-gray-900 p-6 text-white">
+      <Avatar className="h-24 w-24">
+        <AvatarFallback className="text-3xl">👻</AvatarFallback>
+      </Avatar>
+      <h2 className="mt-4 text-2xl font-bold">
+        No username? No problem! Pick one and flex your digital swagger!
+      </h2>
+      <p className="mt-4 text-center text-sm text-gray-300">
+        Your profile is incomplete. Set your name and a unique username to join
+        the leaderboards.
+      </p>
+      <Button asChild className="mt-6">
+        <Link href="/settings/profile">Go to Profile Settings</Link>
+      </Button>
+    </div>
+  );
+}

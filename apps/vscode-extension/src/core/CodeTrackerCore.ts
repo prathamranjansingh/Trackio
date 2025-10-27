@@ -232,7 +232,7 @@ export class CodeTrackerCore implements vscode.Disposable {
       console.error(
         "!!! [sendCachedBatch] CRITICAL ERROR loading/sending cache:",
         loadError
-      ); // ADDED
+      );
     }
     console.log(">>> [sendCachedBatch] Function EXITED <<<"); // ADDED
   }

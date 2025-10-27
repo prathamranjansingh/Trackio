@@ -3,12 +3,12 @@
 - .turbo
   - cache
   - cookies
-    - 1.cookie
-    - 2.cookie
-    - 3.cookie
-    - 4.cookie
   - daemon
     - 5ee278737f73a6a9-turbo.log.2025-10-17
+    - 5ee278737f73a6a9-turbo.log.2025-10-18
+    - 5ee278737f73a6a9-turbo.log.2025-10-21
+    - 5ee278737f73a6a9-turbo.log.2025-10-22
+    - 5ee278737f73a6a9-turbo.log.2025-10-26
 - apps
   - vscode-extension
     - .vscodeignore
@@ -18,33 +18,10 @@
       - codetracker-cli-darwin-arm64
       - codetracker-cli-linux-amd64
       - codetracker-cli-win32-amd64.exe
+    - codetracker-0.1.0.vsix
     - dist
-      - core
-        - CodeTrackerCore.js
-        - CodeTrackerCore.js.map
-        - Heartbeat.js
-        - Heartbeat.js.map
-        - types.js
-        - types.js.map
       - extension.js
       - extension.js.map
-      - ui
-        - commands.js
-        - commands.js.map
-        - statusBar.js
-        - statusBar.js.map
-      - utils
-        - cache.js
-        - cache.js.map
-        - cli.js
-        - cli.js.map
-        - config.js
-        - config.js.map
-        - constants.js
-        - constants.js.map
-      - wakatime.js
-      - wakatime.js.map
-    - esbuild.mjs
     - LICENSE
     - out
       - package
@@ -84,7 +61,6 @@
         - LICENSE
         - package.json
         - README.md
-    - package.js
     - package.json
     - README.md
     - src
@@ -102,6 +78,7 @@
         - config.ts
         - constants.ts
     - tsconfig.json
+    - webpack.config.js
   - web
     - .env
     - .gitignore
@@ -239,6 +216,7 @@
         - Streaks.tsx
         - TopicAnalysis.tsx
         - TotalQuestions.tsx
+      - profile
       - timer
         - ClockTab.tsx
         - ProductionStopwatch.tsx
@@ -312,6 +290,8 @@
         - 20251013154329_extension_api
           - migration.sql
         - 20251014190812_heartbeat
+          - migration.sql
+        - 20251018105222_extension_testing
           - migration.sql
         - migration_lock.toml
       - schema.prisma
@@ -426,4 +406,5 @@
     - tsup.config.ts
 - project_structure.text
 - README.md
+- requests.http
 - turbo.json
