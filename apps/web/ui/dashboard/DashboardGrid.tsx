@@ -15,35 +15,40 @@ import TotalQuestions from "../leetcode/TotalQuestions";
 import Badges from "../leetcode/Badges";
 import { TopicAnalysis } from "../leetcode/TopicAnalysis";
 import LeetCodeHeatmap from "../leetcode/LeetCodeHeatmap";
+import { signOut } from "next-auth/react";
+import { Avatar, AvatarFallback, AvatarImage } from "@trackio/ui";
+import { getInitials } from "@trackio/utils";
+import { DashboardProfileCard } from "../profile/DashboardProfileCard";
 
-export default function DashboardWithSidebar() {
+// Define the User prop type
+type User = {
+  id: string;
+  name: string | null;
+  username: string | null;
+  image: string | null;
+};
+
+export default function DashboardWithSidebar({ user }: { user: User }) {
   const links = [
     {
       label: "Dashboard",
-      href: "#",
+      href: "/dashboard",
       icon: (
         <IconBrandTabler className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
       ),
     },
     {
-      label: "Profile",
-      href: "#",
+      label: "Profile", // This link just leads to the dashboard
+      href: "/dashboard",
       icon: (
         <IconUserBolt className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
       ),
     },
     {
-      label: "Settings",
-      href: "#",
+      label: "Settings", // This links to the new settings page
+      href: "/settings/profile",
       icon: (
         <IconSettings className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
-      ),
-    },
-    {
-      label: "Logout",
-      href: "#",
-      icon: (
-        <IconArrowLeft className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
       ),
     },
   ];
@@ -65,23 +70,28 @@ export default function DashboardWithSidebar() {
               {links.map((link, idx) => (
                 <SidebarLink key={idx} link={link} />
               ))}
+              {/* Logout Button */}
+              <button
+                onClick={() => signOut({ callbackUrl: "/login" })}
+                className="flex items-center gap-2 rounded-lg p-2 text-sm font-normal text-neutral-700 hover:bg-gray-200 dark:text-neutral-200 dark:hover:bg-neutral-800"
+              >
+                <IconArrowLeft className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
+                {open && <span>Logout</span>}
+              </button>
             </div>
           </div>
 
-          {/* Bottom user profile */}
+          {/* Bottom user profile - NOW DYNAMIC */}
           <div>
             <SidebarLink
               link={{
-                label: "Pratham",
-                href: "#",
+                label: user.name || user.username || "Anonymous Coder",
+                href: "/settings/profile",
                 icon: (
-                  <img
-                    src="https://assets.aceternity.com/manu.png"
-                    className="h-7 w-7 shrink-0 rounded-full"
-                    width={50}
-                    height={50}
-                    alt="Avatar"
-                  />
+                  <Avatar className="h-7 w-7 shrink-0 rounded-full">
+                    <AvatarImage src={user.image || undefined} alt="Avatar" />
+                    <AvatarFallback>{getInitials(user.name)}</AvatarFallback>
+                  </Avatar>
                 ),
               }}
             />
@@ -92,16 +102,16 @@ export default function DashboardWithSidebar() {
       {/* Dashboard Grid Content */}
       <div className="flex flex-1 overflow-y-auto p-4">
         <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-6 gap-4 w-full">
-          {/* Header */}
-          <div className="col-span-2 sm:col-span-2 lg:col-span-2 row-span-2 min-h-[300px] bg-gray-400">
-            Profile
+          {/* Header - NOW THE PROFILE CARD */}
+          <div className="col-span-2 sm:col-span-2 lg:col-span-2 row-span-2 min-h-[300px]">
+            <DashboardProfileCard user={user} />
           </div>
 
           {/* Socials */}
           <div
             className="col-span-1 sm:col-span-1 lg:col-span-1 
-                bg-[#FEB61C] border rounded-3xl border-[#4d3c33] 
-                flex flex-col justify-between items-center p-2"
+                       bg-[#FEB61C] border rounded-3xl border-[#4d3c33] 
+                       flex flex-col justify-between items-center p-2"
           >
             <div className="flex justify-center w-full mt-2">
               <TotalQuestions username="PrathamSingh07" />
@@ -137,7 +147,7 @@ export default function DashboardWithSidebar() {
           </div>
 
           {/* About */}
-          <div className="col-span-2 sm:col-span-1 lg:col-span-2  border border-[#373737] bg-[#171717] min-h-[350px] rounded-lg">
+          <div className="col-span-2 sm:col-span-1 lg:col-span-2   border border-[#373737] bg-[#171717] min-h-[350px] rounded-lg">
             <div className="flex-1 flex flex-col p-4 sm:p-6 items-center justify-center">
               <LeetCodeHeatmap username="PrathamSingh07" />
             </div>
@@ -161,6 +171,7 @@ export default function DashboardWithSidebar() {
   );
 }
 
+// Logo components (unchanged)
 export const Logo = () => (
   <a
     href="#"
