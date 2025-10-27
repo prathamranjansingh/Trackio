@@ -103,7 +103,7 @@ export default function DashboardWithSidebar({ user }: { user: User }) {
       <div className="flex flex-1 overflow-y-auto p-4">
         <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-6 gap-4 w-full">
           {/* Header - NOW THE PROFILE CARD */}
-          <div className="col-span-2 sm:col-span-2 lg:col-span-2 row-span-2 min-h-[300px]">
+          <div className="col-span-2 sm:col-span-2 lg:col-span-2 row-span-2 rounded-3xl font-obviously min-h-[300px] bg-[#D0FF90]">
             <DashboardProfileCard user={user} />
           </div>
 

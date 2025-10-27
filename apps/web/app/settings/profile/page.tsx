@@ -28,13 +28,12 @@ export default async function ProfileSettingsPage() {
   }
 
   return (
-    <div className="container mx-auto max-w-2xl py-8">
-      <Card>
+    <div className="flex items-center justify-center min-h-screen">
+      <Card className="w-full max-w-2xl border border-subtle">
         <CardHeader>
           <CardTitle>Profile Settings</CardTitle>
         </CardHeader>
         <CardContent>
-          {/* Pass the server-fetched data to the client form */}
           <ProfileForm user={user} />
         </CardContent>
       </Card>

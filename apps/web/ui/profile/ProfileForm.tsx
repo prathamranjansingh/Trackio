@@ -108,7 +108,7 @@ export function ProfileForm({ user }: { user: UserProps }) {
         <div className="space-y-2">
           <Label htmlFor="username">Username</Label>
           <div className="flex items-center">
-            <span className="rounded-l-md border border-r-0 border-gray-300 bg-gray-100 px-3 py-2 text-sm text-gray-500">
+            <span className="rounded-l-md bg-[#ec4e02] px-3 py-2 text-sm text-white">
               @
             </span>
             <Input
@@ -123,17 +123,18 @@ export function ProfileForm({ user }: { user: UserProps }) {
           )}
         </div>
 
-        {/* Submit Button */}
-        <Button type="submit" disabled={isSubmitting}>
-          {isSubmitting ? (
-            <>
-              <Spinner className="mr-2" />
-              Saving...
-            </>
-          ) : (
-            "Save Changes"
-          )}
-        </Button>
+        <div className="max-w-screen flex justify-end">
+          <Button className="text-white" type="submit" disabled={isSubmitting}>
+            {isSubmitting ? (
+              <>
+                <Spinner className="mr-2" />
+                Saving...
+              </>
+            ) : (
+              "Save Changes"
+            )}
+          </Button>
+        </div>
       </form>
     </>
   );
