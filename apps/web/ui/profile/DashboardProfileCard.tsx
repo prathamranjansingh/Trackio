@@ -16,20 +16,29 @@ export function DashboardProfileCard({ user }: { user: User }) {
   if (isProfileComplete) {
     // STATE 1: Profile is complete
     return (
-      <div className="flex h-full flex-col items-center justify-center p-6 text-black">
-        <Avatar className="h-24 w-24">
-          <AvatarImage src={user.image || undefined} alt="Profile picture" />
-          <AvatarFallback className="text-3xl">
-            {getInitials(user.name)}
-          </AvatarFallback>
-        </Avatar>
-        <h2 className="mt-4 text-6xl font-bold">{user.name}</h2>
-        <p className="font-mono text-md font-normal text-black">
-          @{user.username}
-        </p>
-        <p className="mt-4 text-center text-sm font-mono">
-          Welcome to your coding dashboard. All your stats, all in one place.
-        </p>
+      <div className="flex h-full flex-col items-center justify-evenly p-6 text-black">
+        <div>
+          <Avatar className="h-24 w-24">
+            <AvatarImage src={user.image || undefined} alt="Profile picture" />
+            <AvatarFallback className="text-3xl">
+              {getInitials(user.name)}
+            </AvatarFallback>
+          </Avatar>
+          <h1 className="font-mono text-lg font-normal text-black">
+            @{user.username}
+          </h1>
+        </div>
+        <div>
+          <p className="mt-4 text-center text-base font-mono">
+            Hii{" "}
+            <span className="font-extrabold">
+              {user?.name
+                ? user.name.charAt(0).toUpperCase() + user.name.slice(1)
+                : ""}
+            </span>{" "}
+            your dashboard here, your unofficial hype squad. It's time to cook.
+          </p>
+        </div>
       </div>
     );
   }

@@ -97,18 +97,24 @@ export function TopicAnalysis({ username }: { username: string }) {
   if (error || !data || !totals) {
     return (
       <div className="flex flex-col items-center justify-center text-center p-6 text-sm text-muted-foreground">
-        <div>⚠️ Could not load LeetCode analysis for <b>{username}</b></div>
-        <div className="mt-1 text-xs">{error?.message || "No data available."}</div>
+        <div>
+          ⚠️ Could not load LeetCode analysis for <b>{username}</b>
+        </div>
+        <div className="mt-1 text-xs">
+          {error?.message || "No data available."}
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col h-full justify-between">
+    <div className="flex flex-col font-mono h-full justify-between">
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-stretch border-b border-border/20">
         <div className="flex-1 flex flex-col justify-center gap-1 px-6 py-4">
-          <h2 className="text-lg font-semibold">DSA Topic Analysis</h2>
+          <h2 className="text-lg font-semibold font-mono">
+            DSA Topic Analysis
+          </h2>
           <p className="text-sm text-muted-foreground">
             Breakdown by difficulty level
           </p>
@@ -116,25 +122,26 @@ export function TopicAnalysis({ username }: { username: string }) {
 
         {/* Buttons */}
         <div className="flex ">
-  {(["fundamental", "intermediate", "advanced"] as const).map((level) => (
-    <button
-      key={level}
-      data-active={activeLevel === level}
-      className={`flex flex-1 flex-col justify-center gap-1 
+          {(["fundamental", "intermediate", "advanced"] as const).map(
+            (level) => (
+              <button
+                key={level}
+                data-active={activeLevel === level}
+                className={`flex flex-1 flex-col justify-center gap-1 
                  px-2 py-2 sm:px-6 sm:py-4 text-left transition-colors
                  min-w-0 sm:min-w-[0] data-[active=true]:bg-muted/60 hover:bg-muted/40`}
-      onClick={() => setActiveLevel(level)}
-    >
-      <span className="text-xs sm:text-xs text-muted-foreground">
-        {chartConfig[level].label}
-      </span>
-      <span className="text-sm sm:text-2xl font-bold leading-none">
-        {totals[level].toLocaleString()}
-      </span>
-    </button>
-  ))}
-</div>
-
+                onClick={() => setActiveLevel(level)}
+              >
+                <span className="text-xs sm:text-xs text-muted-foreground">
+                  {chartConfig[level].label}
+                </span>
+                <span className="text-sm sm:text-2xl font-bold leading-none">
+                  {totals[level].toLocaleString()}
+                </span>
+              </button>
+            )
+          )}
+        </div>
       </div>
 
       {/* Chart Section */}
@@ -160,7 +167,12 @@ export function TopicAnalysis({ username }: { username: string }) {
                 style: { fontSize: 14, fill: "hsl(var(--muted-foreground))" },
               }}
             />
-            <YAxis tickLine={false} axisLine={false} tickMargin={8} width={30} />
+            <YAxis
+              tickLine={false}
+              axisLine={false}
+              tickMargin={8}
+              width={30}
+            />
             <ChartTooltip
               cursor={false}
               content={
