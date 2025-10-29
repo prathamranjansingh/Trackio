@@ -13,6 +13,7 @@ export class CacheManager {
    * Saves the entire BatchPayload object (heartbeats + timezone) to disk.
    */
   async savePayloadToDisk(payload: BatchPayload): Promise<void> {
+    console.log(">>> cache.savePayloadToDisk ENTERED <<<");
     if (payload.heartbeats.length > 0) {
       console.log(
         `Saving payload with ${payload.heartbeats.length} heartbeats to cache.`
@@ -29,6 +30,7 @@ export class CacheManager {
       } catch (error) {
         console.error("Failed to save heartbeat cache:", error);
       }
+      console.log(">>> cache.savePayloadToDisk EXITED <<<");
     } else {
       console.log(`[CacheManager] Queue empty, ensuring cache is clear.`);
       await this.clearCache();
@@ -39,6 +41,7 @@ export class CacheManager {
    * Loads the cached payload from disk, clears the cache, and returns the payload.
    */
   async loadAndClearCachedBatchPayload(): Promise<BatchPayload | null> {
+    console.log(">>> cache.loadAndClearCachedBatchPayload ENTERED <<<");
     const cachedData = this.context.globalState.get<CachedBatch>(CACHE_KEY);
 
     if (
@@ -59,16 +62,18 @@ export class CacheManager {
     console.log(
       `Loaded payload with ${cachedData.payload.heartbeats.length} heartbeats from cache.`
     );
-
+    console.log(">>> cache.loadAndClearCachedBatchPayload EXITED <<<");
     await this.clearCache();
     return cachedData.payload;
   }
 
   async clearCache(): Promise<void> {
+    console.log(">>> cache.clearCache ENTERED <<<");
     try {
       await this.context.globalState.update(CACHE_KEY, undefined);
     } catch (error) {
       console.error("Failed to clear heartbeat cache:", error);
     }
+    console.log(">>> cache.clearCache EXITED <<<");
   }
 }

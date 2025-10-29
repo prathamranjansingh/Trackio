@@ -5,61 +5,121 @@ import * as fs from "fs";
 import * as child_process from "child_process";
 import {
   EXTENSION_NAME,
-  // CLI_EXIT_SUCCESS is unused, can remove if not needed elsewhere
   CLI_EXIT_API_ERROR,
   CLI_EXIT_INVALID_API_KEY,
 } from "./constants";
 
-// --- getCliPath and ensureCliExecutable functions remain the same ---
-
 export function getCliPath(context: vscode.ExtensionContext): string | null {
+  console.log("\n--- getCliPath START ---");
+  console.log(
+    "[getCliPath] Received context.extensionPath:",
+    context.extensionPath
+  );
+
   const platform = os.platform();
   let arch = os.arch();
+  console.log(`[getCliPath] os.platform(): ${platform}, os.arch(): ${arch}`);
 
-  // Normalize arch for binary naming convention
   if (arch === "x64") arch = "amd64";
   if (arch === "arm64") arch = "arm64";
+  console.log(`[getCliPath] Normalized Arch: ${arch}`);
 
   let binaryName: string;
   switch (platform) {
     case "win32":
       binaryName = `codetracker-cli-${platform}-${arch}.exe`;
       break;
-    case "darwin": // macOS
+    case "darwin":
     case "linux":
       binaryName = `codetracker-cli-${platform}-${arch}`;
       break;
     default:
+      console.error(`[getCliPath] ERROR: Unsupported OS: ${platform}`);
       vscode.window.showErrorMessage(
-        `${EXTENSION_NAME}: Unsupported operating system: ${platform}`
+        `${EXTENSION_NAME}: Unsupported OS: ${platform}`
       );
+      console.log("--- getCliPath END (Unsupported OS) ---");
       return null;
   }
+  console.log(`[getCliPath] Determined Binary Name: ${binaryName}`);
 
-  const cliPath = path.join(context.extensionPath, "cli", binaryName);
+  const expectedCliPath = path.join(context.extensionPath, "cli", binaryName);
+  console.log(`[getCliPath] Constructed Full CLI Path: ${expectedCliPath}`);
 
-  if (!fs.existsSync(cliPath)) {
-    vscode.window.showErrorMessage(
-      `${EXTENSION_NAME} CLI not found at ${cliPath}. Please reinstall the extension.`
+  let fileExists = false;
+  let checkError: Error | null = null;
+  try {
+    console.log(
+      `[getCliPath] >>> Calling fs.existsSync("${expectedCliPath}") NOW <<<`
     );
-    console.error(`CLI not found: ${cliPath}`);
+    fileExists = fs.existsSync(expectedCliPath);
+    console.log(`[getCliPath] <<< fs.existsSync result: ${fileExists} >>>`);
+  } catch (err) {
+    checkError = err instanceof Error ? err : new Error(String(err));
+    console.error(
+      `[getCliPath] !!! ERROR during fs.existsSync !!!`,
+      checkError
+    );
+    vscode.window.showErrorMessage(
+      `${EXTENSION_NAME}: Error checking for CLI file: ${checkError.message}`
+    );
+    console.log("--- getCliPath END (existsSync Error) ---");
     return null;
   }
 
-  return cliPath;
+  if (!fileExists) {
+    console.error(
+      `[getCliPath] !!! FILE NOT FOUND at constructed path: ${expectedCliPath} !!!`
+    );
+    try {
+      const cliDir = path.join(context.extensionPath, "cli");
+      if (fs.existsSync(cliDir)) {
+        const filesInCliDir = fs.readdirSync(cliDir);
+        console.log(`[getCliPath] Contents of ${cliDir}:`, filesInCliDir);
+      } else {
+        console.log(
+          `[getCliPath] Expected cli directory does NOT exist: ${cliDir}`
+        );
+      }
+      const extensionDir = context.extensionPath;
+      if (fs.existsSync(extensionDir)) {
+        const filesInExtDir = fs.readdirSync(extensionDir);
+        console.log(
+          `[getCliPath] Contents of ${extensionDir}:`,
+          filesInExtDir.filter((f) => !["node_modules"].includes(f))
+        );
+      } else {
+        console.log(
+          `[getCliPath] Expected extension directory does NOT exist: ${extensionDir}`
+        );
+      }
+    } catch (listErr) {
+      console.error(
+        "[getCliPath] Error trying to list directory contents:",
+        listErr
+      );
+    }
+    vscode.window.showErrorMessage(
+      `${EXTENSION_NAME} CLI not found at ${expectedCliPath}. Please reinstall.`
+    );
+    console.log("--- getCliPath END (File Not Found) ---");
+    return null;
+  }
+
+  console.log(`[getCliPath] CLI successfully found at: ${expectedCliPath}`);
+  console.log("--- getCliPath END (Success) ---");
+  return expectedCliPath;
 }
 
 export function ensureCliExecutable(cliPath: string): boolean {
   if (os.platform() !== "win32") {
     try {
       const stats = fs.statSync(cliPath);
-      // eslint-disable-next-line no-bitwise
       if (!(stats.mode & fs.constants.S_IXUSR)) {
         fs.chmodSync(cliPath, 0o755); // rwxr-xr-x
         console.log(`Made CLI executable: ${cliPath}`);
       }
     } catch (err) {
-      // Safely handle potential errors from fs.statSync or fs.chmodSync
       const errorMessage = err instanceof Error ? err.message : String(err);
       vscode.window.showErrorMessage(
         `${EXTENSION_NAME}: Failed to make CLI executable: ${errorMessage}`
@@ -71,13 +131,13 @@ export function ensureCliExecutable(cliPath: string): boolean {
   return true;
 }
 
-// --- CliResult interface remains the same ---
 export interface CliResult {
   success: boolean;
-  error?: string; // Expecting string | undefined
+  error?: string;
   isApiKeyInvalid?: boolean;
 }
 
+// --- ADD export HERE ---
 export function runCli(
   cliPath: string,
   args: string[],
@@ -85,7 +145,7 @@ export function runCli(
 ): Promise<CliResult> {
   return new Promise((resolve) => {
     const options: child_process.ExecFileOptions = {
-      timeout: 30000, // 30 second timeout for the CLI process
+      timeout: 30000,
     };
 
     const proc = child_process.execFile(
@@ -93,18 +153,14 @@ export function runCli(
       args,
       options,
       (error, stdout, stderr) => {
-        // --- FIX IS HERE ---
-        // Convert stdout/stderr Buffers to strings
         const stdoutString = stdout?.toString() || "";
         const stderrString = stderr?.toString() || "";
-        const combinedOutput = stderrString || stdoutString; // Prioritize stderr for error messages
+        const combinedOutput = stderrString || stdoutString;
 
         if (error) {
-          // Now assign the converted strings or default messages
           if (error.code === CLI_EXIT_INVALID_API_KEY) {
             resolve({
               success: false,
-              // Use combinedOutput first, then the default message
               error:
                 combinedOutput ||
                 `CLI Error: Invalid API Key (Code ${error.code})`,
@@ -120,7 +176,6 @@ export function runCli(
           } else {
             resolve({
               success: false,
-              // Include error.message for more context if output is empty
               error:
                 combinedOutput ||
                 `CLI Error: ${error.message} (Code ${error.code})`,
@@ -128,25 +183,19 @@ export function runCli(
           }
           return;
         }
-        // Check if Go CLI printed any errors even on success exit code
         if (stderrString) {
           console.warn(`CLI stderr (Exit Code 0): ${stderrString}`);
-          // Still resolve as success, but stderr might contain useful warnings
         }
         resolve({ success: true });
       }
     );
 
-    // Write batch data to CLI's standard input
     if (proc.stdin) {
       const stdin = proc.stdin;
       stdin.write(stdinContent, (err) => {
         if (err) {
           console.error("Error writing to CLI stdin:", err);
-          // It's tricky to resolve here as the execFile callback might still run.
-          // The execFile callback will likely receive an error if stdin fails badly.
         }
-        // Use the captured non-null stdin reference to avoid possible null access
         try {
           stdin.end();
         } catch (e) {
@@ -154,7 +203,6 @@ export function runCli(
         }
       });
     } else {
-      // This path is less likely but good to handle
       resolve({ success: false, error: "Failed to get CLI stdin stream." });
     }
   });

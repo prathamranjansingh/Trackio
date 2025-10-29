@@ -9,6 +9,11 @@
     - 5ee278737f73a6a9-turbo.log.2025-10-21
     - 5ee278737f73a6a9-turbo.log.2025-10-22
     - 5ee278737f73a6a9-turbo.log.2025-10-26
+    - 5ee278737f73a6a9-turbo.log.2025-10-27
+    - 5ee278737f73a6a9-turbo.log.2025-10-28
+    - 5ee278737f73a6a9-turbo.log.2025-10-29
+  - preferences
+    - tui.json
 - apps
   - vscode-extension
     - .vscodeignore
@@ -113,6 +118,8 @@
         - leetcode
           - [username]
             - route.ts
+        - profile
+          - route.ts
         - worker
           - route.ts
       - dashboard
@@ -126,6 +133,9 @@
       - layout.tsx
       - page.module.css
       - providers.tsx
+      - settings
+        - profile
+          - page.tsx
     - eslint.config.js
     - lib
       - actions
@@ -176,6 +186,7 @@
         - index.ts
         - schemas
           - auth.ts
+          - profile.ts
     - middleware.ts
     - next-env.d.ts
     - next.config.js
@@ -217,6 +228,8 @@
         - TopicAnalysis.tsx
         - TotalQuestions.tsx
       - profile
+        - DashboardProfileCard.tsx
+        - ProfileForm.tsx
       - timer
         - ClockTab.tsx
         - ProductionStopwatch.tsx
@@ -293,6 +306,8 @@
           - migration.sql
         - 20251018105222_extension_testing
           - migration.sql
+        - 20251026193054_
+          - migration.sql
         - migration_lock.toml
       - schema.prisma
   - tailwind-config
@@ -357,13 +372,16 @@
       - turbo-check-types.log
     - dist
       - chunk-4RPJAVOY.mjs
+      - chunk-CRYM3YYB.mjs
       - chunk-DALAM2UJ.mjs
       - chunk-EEVR76LV.mjs
+      - chunk-G7IAWWVO.mjs
       - chunk-LJUGP36D.mjs
       - chunk-MR4JSNGF.mjs
       - chunk-OO7EJUZQ.mjs
       - chunk-PMOQSSOL.mjs
       - chunk-PN63AWSC.mjs
+      - chunk-RCDW4MZH.mjs
       - chunk-S7T4Y2Q5.mjs
       - chunk-TQI6HB26.mjs
       - chunk-UAI7YC3Q.mjs
@@ -379,6 +397,8 @@
         - capitalize.mjs
         - index.d.ts
         - index.mjs
+        - initials.d.ts
+        - initials.mjs
         - timeUtils.d.ts
         - timeUtils.mjs
         - urls.d.ts
@@ -397,6 +417,7 @@
       - functions
         - capitalize.ts
         - index.ts
+        - initials.ts
         - timeUtils.ts
         - urls.ts
         - useCurrentTime.ts
