@@ -15,7 +15,7 @@ const ProductionStopwatch: React.FC = () => {
   const { formattedTime, formattedDate } = useCurrentTime();
 
   return (
-    <div className="bg-white rounded-[40px] flex items-center justify-center p-4">
+    <div className=" flex items-center justify-center p-4">
       <div className="w-full mx-auto">
         {/* Tab Content */}
         <div className="p-4 md:p-6 min-h-[220px] flex flex-col items-center justify-center transition-all duration-300">

@@ -76,7 +76,7 @@ export default function Badges({ username }: { username: string }) {
 
   return (
     <TooltipProvider>
-      <div className="text-white flex flex-col items-center space-y-6 font-mono p-2">
+      <div className="text-black flex flex-col items-center space-y-6 font-mono p-2">
         {/* Total badge count */}
 
         <div className="flex flex-col text-sm text-center font-light font-mono pt-4">
@@ -96,6 +96,10 @@ export default function Badges({ username }: { username: string }) {
                       src={getBadgeIconUrl(badge)}
                       alt={badge.displayName || badge.name}
                       className="w-20 h-20 [@media(min-width:1020px)]:w-12 [@media(min-width:1020px)]:h-12 [@media(min-width:1300px)]:w-20 [@media(min-width:1300px)]:h-20 mb-2"
+                      style={{
+                        filter:
+                          "drop-shadow(0 0 0 black) drop-shadow(0 0 5px black)",
+                      }}
                     />
                   </div>
                 </TooltipTrigger>

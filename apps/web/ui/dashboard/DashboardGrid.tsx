@@ -101,7 +101,7 @@ export default function DashboardWithSidebar({ user }: { user: User }) {
 
       {/* Dashboard Grid Content */}
       <div className="flex flex-1 overflow-y-auto p-4">
-        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-6 gap-4 w-full">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-6 auto-rows-min gap-4 w-full">
           {/* Header - NOW THE PROFILE CARD */}
           <div className="col-span-2 sm:col-span-2 lg:col-span-2 row-span-2 rounded-3xl font-obviously min-h-[300px] bg-[#D0FF90]">
             <DashboardProfileCard user={user} />
@@ -130,10 +130,10 @@ export default function DashboardWithSidebar({ user }: { user: User }) {
               <div>Streak</div>
             </div>
           </div>
-          <div className="col-span-2 sm:col-span-2 lg:col-span-2 row-span-2 ">
+          <div className="col-span-2 sm:col-span-2 lg:col-span-2 row-span-2 bg-white rounded-3xl min-h-[300px]">
             <ProductionStopwatch />
           </div>
-          <div className="col-span-2 sm:col-span-2 lg:col-span-2 border border-[#373737] bg-[#171717] min-h-[220px] flex flex-col justify-center rounded-3xl gap-4 items-center">
+          <div className="col-span-2 sm:col-span-2 lg:col-span-2 border border-[#373737] bg-[#F0EEDF] min-h-[220px] flex flex-col justify-center rounded-3xl gap-4 items-center">
             <div>
               <Badges username="leetgoat_dot_dev" />
             </div>
@@ -147,7 +147,7 @@ export default function DashboardWithSidebar({ user }: { user: User }) {
           </div>
 
           {/* About */}
-          <div className="col-span-2 sm:col-span-1 lg:col-span-2   border border-[#373737] bg-[#171717] min-h-[350px] rounded-lg">
+          <div className="col-span-2 sm:col-span-1 lg:col-span-2   border border-[#373737] bg-[#ffed90] min-h-[350px] rounded-lg">
             <div className="flex-1 flex flex-col p-4 sm:p-6 items-center justify-center">
               <LeetCodeHeatmap username="PrathamSingh07" />
             </div>

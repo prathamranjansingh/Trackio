@@ -41,9 +41,9 @@ function parseSubmissionCalendar(calendarString?: string): WeightedDate[] {
 
 /* ----------------------------- 🎨 Variants ----------------------------- */
 const LeetCodeVariants = [
-  "text-white hover:text-white bg-green-400 hover:bg-green-400",
-  "text-white hover:text-white bg-green-500 hover:bg-green-500",
-  "text-white hover:text-white bg-green-700 hover:bg-green-700",
+  "text-black hover:text-black bg-green-400 hover:bg-green-400",
+  "text-black hover:text-black bg-green-500 hover:bg-green-500",
+  "text-black hover:text-black bg-green-700 hover:bg-green-700",
 ];
 
 function mapWeightsToVariants(
@@ -88,9 +88,9 @@ export default function LeetCodeHeatmap({ username }: { username: string }) {
   ]);
 
   return (
-    <div className="w-full flex flex-col items-center">
+    <div className="w-full flex flex-col items-center font-mono">
       <CalendarHeatmap
-        className={cn(" lg:motion-safe:[animation-delay:1000ms]")}
+        className={cn("text-black lg:motion-safe:[animation-delay:1000ms]")}
         variantClassnames={LeetCodeVariants}
         datesPerVariant={datesPerVariant.map((group) =>
           group.map((d) => d.date)
