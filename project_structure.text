@@ -12,6 +12,7 @@
     - 5ee278737f73a6a9-turbo.log.2025-10-27
     - 5ee278737f73a6a9-turbo.log.2025-10-28
     - 5ee278737f73a6a9-turbo.log.2025-10-29
+    - 5ee278737f73a6a9-turbo.log.2025-11-02
   - preferences
     - tui.json
 - apps
@@ -130,6 +131,9 @@
         - GeistVF.woff
         - ObviouslyVariable.woff2
       - globals.css
+      - image
+        - banner.jpeg
+        - icon.jpeg
       - layout.tsx
       - page.module.css
       - providers.tsx
@@ -216,6 +220,7 @@
       - dashboard
         - CardWrapper.tsx
         - DashboardGrid.tsx
+        - Header.tsx
       - layout
         - auth-layout.tsx
         - sidebar

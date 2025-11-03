@@ -9,71 +9,68 @@ export class CacheManager {
     this.context = context;
   }
 
-  /**
-   * Saves the entire BatchPayload object (heartbeats + timezone) to disk.
-   */
   async savePayloadToDisk(payload: BatchPayload): Promise<void> {
-    console.log(">>> cache.savePayloadToDisk ENTERED <<<");
     if (payload.heartbeats.length > 0) {
-      console.log(
-        `Saving payload with ${payload.heartbeats.length} heartbeats to cache.`
-      );
       const cachedData: CachedBatch = {
         timestamp: Date.now(),
         payload: payload,
       };
       try {
         await this.context.globalState.update(CACHE_KEY, cachedData);
-        console.log(
-          `[CacheManager] Successfully saved payload to globalState.`
-        );
+        // console.log(`[CacheManager] Saved ${payload.heartbeats.length} heartbeats.`); // Optional: Keep for debugging if needed
       } catch (error) {
-        console.error("Failed to save heartbeat cache:", error);
+        console.error(
+          "[CacheManager] CRITICAL: Failed to save heartbeat cache:",
+          error
+        );
+        // Maybe show error only once to avoid spamming user
+        // vscode.window.showErrorMessage("Code Tracker: Failed to save unsent data!");
       }
-      console.log(">>> cache.savePayloadToDisk EXITED <<<");
     } else {
-      console.log(`[CacheManager] Queue empty, ensuring cache is clear.`);
-      await this.clearCache();
+      await this.clearCache(); // Ensure cache is clear if queue is empty
     }
   }
 
-  /**
-   * Loads the cached payload from disk, clears the cache, and returns the payload.
-   */
   async loadAndClearCachedBatchPayload(): Promise<BatchPayload | null> {
-    console.log(">>> cache.loadAndClearCachedBatchPayload ENTERED <<<");
-    const cachedData = this.context.globalState.get<CachedBatch>(CACHE_KEY);
-
-    if (
-      !cachedData ||
-      !cachedData.payload ||
-      !cachedData.payload.heartbeats ||
-      cachedData.payload.heartbeats.length === 0
-    ) {
+    let cachedData: CachedBatch | undefined;
+    try {
+      cachedData = this.context.globalState.get<CachedBatch>(CACHE_KEY);
+    } catch (e) {
+      console.error("[CacheManager] Error getting data from globalState:", e);
+      await this.clearCache(); // Clear potentially corrupt data
       return null;
     }
 
+    if (!cachedData?.payload?.heartbeats?.length) {
+      return null; // No valid cache
+    }
+
     if (Date.now() - cachedData.timestamp > CACHE_MAX_AGE_MS) {
-      console.log("Cached batch is older than 24 hours. Discarding.");
+      console.log("[CacheManager] Cache expired. Discarding.");
       await this.clearCache();
       return null;
     }
 
     console.log(
-      `Loaded payload with ${cachedData.payload.heartbeats.length} heartbeats from cache.`
+      `[CacheManager] Valid cache found (${cachedData.payload.heartbeats.length} heartbeats). Clearing cache.`
     );
-    console.log(">>> cache.loadAndClearCachedBatchPayload EXITED <<<");
-    await this.clearCache();
+    try {
+      await this.clearCache(); // Clear cache AFTER validation
+    } catch (clearError) {
+      console.error(
+        "[CacheManager] Error clearing cache after load:",
+        clearError
+      );
+      // Non-fatal, return the data anyway
+    }
     return cachedData.payload;
   }
 
   async clearCache(): Promise<void> {
-    console.log(">>> cache.clearCache ENTERED <<<");
     try {
       await this.context.globalState.update(CACHE_KEY, undefined);
     } catch (error) {
-      console.error("Failed to clear heartbeat cache:", error);
+      console.error("[CacheManager] Failed to clear heartbeat cache:", error);
     }
-    console.log(">>> cache.clearCache EXITED <<<");
   }
 }

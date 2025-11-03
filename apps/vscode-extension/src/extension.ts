@@ -2,57 +2,39 @@ import * as vscode from "vscode";
 import { CodeTrackerCore } from "./core/CodeTrackerCore";
 import { registerCommands } from "./ui/commands";
 
-// --- ADD THIS UNMISTAKABLE LOG ---
-console.log("--- !!! EXTENSION ENTRY POINT (extension.ts) LOADED !!! ---");
-
 let core: CodeTrackerCore | undefined;
 
 export async function activate(
   context: vscode.ExtensionContext
 ): Promise<void> {
-  // --- ADD THIS UNMISTAKABLE LOG ---
-  console.log("--- !!! ACTIVATE FUNCTION CALLED !!! ---");
-
-  // Log the version to confirm which code is running
   const extensionVersion = context.extension.packageJSON.version;
-  console.log(`--- Activating Code Tracker version: ${extensionVersion} ---`);
-
-  console.log("Code Tracker extension is activating..."); // Original log
+  console.log(`Activating Code Tracker version: ${extensionVersion}...`); // Essential activation log
 
   try {
-    // Wrap the core instantiation and init
-    console.log("--- Instantiating CodeTrackerCore ---");
     core = new CodeTrackerCore(context);
-    console.log("--- Calling core.initialize() ---");
     await core.initialize();
-    console.log("--- core.initialize() finished ---");
   } catch (coreError) {
-    console.error("!!! CRITICAL ERROR DURING CORE SETUP:", coreError);
+    console.error("CRITICAL ERROR DURING CODE TRACKER ACTIVATION:", coreError);
     vscode.window.showErrorMessage(
-      "Code Tracker failed during setup. Check Developer Tools Console."
+      "Code Tracker failed to activate. Please check Developer Tools Console (Help > Toggle Developer Tools)."
     );
-    return; // Stop if core fails
+    return; // Stop activation if core fails critically
   }
 
-  // Ensure core was successfully created before registering commands
   if (core) {
-    console.log("--- Registering commands ---");
     registerCommands(context, core);
-    console.log("--- Pushing core to subscriptions ---");
-    context.subscriptions.push(core);
+    context.subscriptions.push(core); // Ensure dispose is called on deactivation
   } else {
     console.error(
-      "!!! Core instance is undefined after initialization attempt!"
+      "Code Tracker core instance is undefined after initialization attempt!"
     );
   }
 
-  console.log("Code Tracker extension activated.");
+  console.log("Code Tracker activated successfully."); // Essential activation log
 }
 
 export function deactivate(): Thenable<void> | undefined {
-  // --- ADD THIS UNMISTAKABLE LOG ---
-  console.log("--- !!! DEACTIVATE FUNCTION CALLED !!! ---");
-  // Note: dispose() is called automatically via subscriptions
-  // If the core object exists, its dispose will be called.
-  return Promise.resolve(); // Standard practice to return a Thenable
+  console.log("Deactivating Code Tracker..."); // Keep deactivation log
+  // Core dispose will be called automatically via context.subscriptions
+  return Promise.resolve();
 }

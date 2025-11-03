@@ -10,19 +10,11 @@ import {
 } from "./constants";
 
 export function getCliPath(context: vscode.ExtensionContext): string | null {
-  console.log("\n--- getCliPath START ---");
-  console.log(
-    "[getCliPath] Received context.extensionPath:",
-    context.extensionPath
-  );
-
   const platform = os.platform();
   let arch = os.arch();
-  console.log(`[getCliPath] os.platform(): ${platform}, os.arch(): ${arch}`);
 
   if (arch === "x64") arch = "amd64";
   if (arch === "arm64") arch = "arm64";
-  console.log(`[getCliPath] Normalized Arch: ${arch}`);
 
   let binaryName: string;
   switch (platform) {
@@ -38,24 +30,23 @@ export function getCliPath(context: vscode.ExtensionContext): string | null {
       vscode.window.showErrorMessage(
         `${EXTENSION_NAME}: Unsupported OS: ${platform}`
       );
-      console.log("--- getCliPath END (Unsupported OS) ---");
       return null;
   }
-  console.log(`[getCliPath] Determined Binary Name: ${binaryName}`);
 
   const expectedCliPath = path.join(context.extensionPath, "cli", binaryName);
-  console.log(`[getCliPath] Constructed Full CLI Path: ${expectedCliPath}`);
 
-  let fileExists = false;
-  let checkError: Error | null = null;
   try {
-    console.log(
-      `[getCliPath] >>> Calling fs.existsSync("${expectedCliPath}") NOW <<<`
-    );
-    fileExists = fs.existsSync(expectedCliPath);
-    console.log(`[getCliPath] <<< fs.existsSync result: ${fileExists} >>>`);
+    if (!fs.existsSync(expectedCliPath)) {
+      console.error(
+        `[getCliPath] !!! FILE NOT FOUND at path: ${expectedCliPath} !!!`
+      );
+      vscode.window.showErrorMessage(
+        `${EXTENSION_NAME} CLI not found at ${expectedCliPath}. Please reinstall.`
+      );
+      return null;
+    }
   } catch (err) {
-    checkError = err instanceof Error ? err : new Error(String(err));
+    const checkError = err instanceof Error ? err : new Error(String(err));
     console.error(
       `[getCliPath] !!! ERROR during fs.existsSync !!!`,
       checkError
@@ -63,51 +54,9 @@ export function getCliPath(context: vscode.ExtensionContext): string | null {
     vscode.window.showErrorMessage(
       `${EXTENSION_NAME}: Error checking for CLI file: ${checkError.message}`
     );
-    console.log("--- getCliPath END (existsSync Error) ---");
     return null;
   }
 
-  if (!fileExists) {
-    console.error(
-      `[getCliPath] !!! FILE NOT FOUND at constructed path: ${expectedCliPath} !!!`
-    );
-    try {
-      const cliDir = path.join(context.extensionPath, "cli");
-      if (fs.existsSync(cliDir)) {
-        const filesInCliDir = fs.readdirSync(cliDir);
-        console.log(`[getCliPath] Contents of ${cliDir}:`, filesInCliDir);
-      } else {
-        console.log(
-          `[getCliPath] Expected cli directory does NOT exist: ${cliDir}`
-        );
-      }
-      const extensionDir = context.extensionPath;
-      if (fs.existsSync(extensionDir)) {
-        const filesInExtDir = fs.readdirSync(extensionDir);
-        console.log(
-          `[getCliPath] Contents of ${extensionDir}:`,
-          filesInExtDir.filter((f) => !["node_modules"].includes(f))
-        );
-      } else {
-        console.log(
-          `[getCliPath] Expected extension directory does NOT exist: ${extensionDir}`
-        );
-      }
-    } catch (listErr) {
-      console.error(
-        "[getCliPath] Error trying to list directory contents:",
-        listErr
-      );
-    }
-    vscode.window.showErrorMessage(
-      `${EXTENSION_NAME} CLI not found at ${expectedCliPath}. Please reinstall.`
-    );
-    console.log("--- getCliPath END (File Not Found) ---");
-    return null;
-  }
-
-  console.log(`[getCliPath] CLI successfully found at: ${expectedCliPath}`);
-  console.log("--- getCliPath END (Success) ---");
   return expectedCliPath;
 }
 
@@ -115,6 +64,7 @@ export function ensureCliExecutable(cliPath: string): boolean {
   if (os.platform() !== "win32") {
     try {
       const stats = fs.statSync(cliPath);
+      // eslint-disable-next-line no-bitwise
       if (!(stats.mode & fs.constants.S_IXUSR)) {
         fs.chmodSync(cliPath, 0o755); // rwxr-xr-x
         console.log(`Made CLI executable: ${cliPath}`);
@@ -137,7 +87,6 @@ export interface CliResult {
   isApiKeyInvalid?: boolean;
 }
 
-// --- ADD export HERE ---
 export function runCli(
   cliPath: string,
   args: string[],
@@ -158,33 +107,32 @@ export function runCli(
         const combinedOutput = stderrString || stdoutString;
 
         if (error) {
+          // Log the actual error output from CLI for debugging backend issues
+          console.error(`[runCli] CLI Error Output: ${combinedOutput}`);
+          console.error(`[runCli] CLI Exit Code: ${error.code}`);
+
           if (error.code === CLI_EXIT_INVALID_API_KEY) {
             resolve({
               success: false,
-              error:
-                combinedOutput ||
-                `CLI Error: Invalid API Key (Code ${error.code})`,
+              error: combinedOutput || `CLI Error: Invalid API Key`,
               isApiKeyInvalid: true,
             });
           } else if (error.code === CLI_EXIT_API_ERROR) {
             resolve({
               success: false,
-              error:
-                combinedOutput ||
-                `CLI Error: API/Network issue (Code ${error.code})`,
+              error: combinedOutput || `CLI Error: API/Network issue`,
             });
           } else {
             resolve({
               success: false,
-              error:
-                combinedOutput ||
-                `CLI Error: ${error.message} (Code ${error.code})`,
+              error: combinedOutput || `CLI Error: ${error.message}`,
             });
           }
           return;
         }
+        // Log warnings from stderr even on success
         if (stderrString) {
-          console.warn(`CLI stderr (Exit Code 0): ${stderrString}`);
+          console.warn(`[runCli] CLI stderr (Exit Code 0): ${stderrString}`);
         }
         resolve({ success: true });
       }
@@ -194,15 +142,16 @@ export function runCli(
       const stdin = proc.stdin;
       stdin.write(stdinContent, (err) => {
         if (err) {
-          console.error("Error writing to CLI stdin:", err);
+          console.error("[runCli] Error writing to CLI stdin:", err);
         }
         try {
           stdin.end();
         } catch (e) {
-          console.error("Error ending CLI stdin:", e);
+          console.error("[runCli] Error ending CLI stdin:", e);
         }
       });
     } else {
+      console.error("[runCli] Failed to get CLI stdin stream.");
       resolve({ success: false, error: "Failed to get CLI stdin stream." });
     }
   });
